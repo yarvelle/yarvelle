@@ -127,7 +127,7 @@ function walkDirectory(dir) {
   return results;
 }
 
-const isCheck = process.argv.includes('--check');
+const isCheck = process.argv.includes('--check') || process.argv.includes('check');
 const files = walkDirectory(REPO_ROOT);
 let hasErrors = false;
 
