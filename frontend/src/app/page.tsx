@@ -11,6 +11,8 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
+'use client';
+
 import React from 'react';
 import { getSlotsFor } from '@/pack-registry.generated';
 

@@ -15,7 +15,10 @@ import { healthPackUi } from '@carefold/health-ui';
 import { financePackUi } from '@/finance';
 import { educationPackUi } from '@/education';
 import { householdPackUi } from '@/household';
-import type { PackUi, SlotContribution, SlotId } from '@yarvelle/ui/slots';
+import type { PackUi, SlotContribution, SlotId, FilterSlotsOptions } from '@yarvelle/ui/slots';
+import { filterSlotContributions } from '@yarvelle/ui/slots';
+
+export { filterSlotContributions, type FilterSlotsOptions };
 
 export const allPacks: PackUi[] = [
   healthPackUi,
@@ -36,11 +39,15 @@ export function getPackUi(packId: string): PackUi | undefined {
 }
 
 export function getAllSlotContributions(): SlotContribution[] {
-  return allPacks.flatMap((p) => p.contributions);
+  return allPacks.flatMap((p) => p?.contributions || []).filter(Boolean);
 }
 
 export function getSlotsFor(slot: SlotId): SlotContribution[] {
   return getAllSlotContributions()
     .filter((c) => c.slot === slot)
     .sort((a, b) => (a.order ?? 100) - (b.order ?? 100));
+}
+
+export function getFilteredSlots(options: FilterSlotsOptions): SlotContribution[] {
+  return filterSlotContributions(getAllSlotContributions(), options);
 }

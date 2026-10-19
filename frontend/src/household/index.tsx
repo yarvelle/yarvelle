@@ -11,88 +11,107 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
+'use client';
+
 import React from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@yarvelle/ui';
 import { definePackUi, type SlotContribution, type SlotProps, type PackUi } from '@yarvelle/ui/slots';
 
 // Household Slot Components
 export function UnifiedTimelineCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-timeline-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Unified Family Timeline</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Live</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Chronological family view spanning clinical visits, bill due dates, and school milestones.</p>
-    </div>
+    <Card data-testid="household-timeline-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Unified Family Timeline</CardTitle>
+          <Badge variant="success">Live</Badge>
+        </div>
+        <CardDescription>Chronological family view spanning clinical visits, bill due dates, and school milestones.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function CrossDomainLinksCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-cross-links-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Cross-Domain Links & Alerts</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Active</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Connected entities across domains and family schedule conflict clusters.</p>
-    </div>
+    <Card data-testid="household-cross-links-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Cross-Domain Links & Alerts</CardTitle>
+          <Badge variant="warn">Active</Badge>
+        </div>
+        <CardDescription>Connected entities across domains and family schedule conflict clusters.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function ChoresRotationCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-chores-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Chores & Routines</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">Today</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Fair chore rotation, daily check-offs, and family routine streaks.</p>
-    </div>
+    <Card data-testid="household-chores-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Chores & Routines</CardTitle>
+          <Badge variant="info">Today</Badge>
+        </div>
+        <CardDescription>Fair chore rotation, daily check-offs, and family routine streaks.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function MealPlannerCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-meals-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Weekly Meals & Grocery List</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Family meal schedules, allergen cross-checks, and grocery lists.</p>
-    </div>
+    <Card data-testid="household-meals-card">
+      <CardHeader>
+        <CardTitle>Weekly Meals & Grocery List</CardTitle>
+        <CardDescription>Family meal schedules, allergen cross-checks, and grocery lists.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function HomeMaintenanceCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-maintenance-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Home Maintenance & Warranties</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Seasonal home checkups, appliance warranties, and service contractor logs.</p>
-    </div>
+    <Card data-testid="household-maintenance-card">
+      <CardHeader>
+        <CardTitle>Home Maintenance & Warranties</CardTitle>
+        <CardDescription>Seasonal home checkups, appliance warranties, and service contractor logs.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function TravelItinerariesCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-travel-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Travel & Packing Lists</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Family vacation prep, packing checklists, and flight itineraries.</p>
-    </div>
+    <Card data-testid="household-travel-card">
+      <CardHeader>
+        <CardTitle>Travel & Packing Lists</CardTitle>
+        <CardDescription>Family vacation prep, packing checklists, and flight itineraries.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function CaregiverHandoverCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-handover-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Caregiver Handover Binder</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Emergency contacts, daily routines, and medical allergy notes for babysitters and family caregivers.</p>
-    </div>
+    <Card data-testid="household-handover-card">
+      <CardHeader>
+        <CardTitle>Caregiver Handover Binder</CardTitle>
+        <CardDescription>Emergency contacts, daily routines, and medical allergy notes for babysitters and family caregivers.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function PanelTogglesSection({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="household-panel-toggles">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Household Domain Toggles</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Enable or disable domain views (Health, Finance, Education, Household) per household member.</p>
-    </div>
+    <Card data-testid="household-panel-toggles">
+      <CardHeader>
+        <CardTitle>Household Domain Toggles</CardTitle>
+        <CardDescription>Enable or disable domain views (Health, Finance, Education, Household) per household member.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 

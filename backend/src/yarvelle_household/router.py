@@ -25,10 +25,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from yarvelle_core.api.deps import get_current_user
 from yarvelle_core.auth.ports import UserProfile
 from yarvelle_core.db.session import get_db
-from yarvelle.household.conflicts import ConflictDetector
-from yarvelle.household.cross_links import CrossLinksService
-from yarvelle.household.models import Household, HouseholdMember
-from yarvelle.household.schemas import (
+from yarvelle_household.conflicts import ConflictDetector
+from yarvelle_household.cross_links import CrossLinksService
+from yarvelle_household.db.models import Household, HouseholdMember
+from yarvelle_household.schemas import (
     AddMemberRequest,
     ConflictResponse,
     CreateHouseholdRequest,
@@ -43,8 +43,8 @@ from yarvelle.household.schemas import (
     UpdateMemberRequest,
     UpdateTogglesRequest,
 )
-from yarvelle.household.shred import ExportDeleteService
-from yarvelle.household.timeline import TimelineService, extract_caller_scopes
+from yarvelle_household.shred import ExportDeleteService
+from yarvelle_household.timeline import TimelineService, extract_caller_scopes
 
 
 router = APIRouter(tags=["household"])

@@ -24,8 +24,9 @@ from yarvelle_core.db.models import (
     Profile,
     Reminder,
 )
-from yarvelle.household.models import CrossDomainLink, Household, HouseholdMember
-from yarvelle.household.schemas import TimelineItem, TimelineResponse
+from yarvelle_household._dynamic import resolve_optional_model
+from yarvelle_household.db.models import CrossDomainLink, Household, HouseholdMember
+from yarvelle_household.schemas import TimelineItem, TimelineResponse
 
 
 DEFAULT_DOMAINS = ["health", "finance", "education", "household"]
@@ -162,36 +163,37 @@ class TimelineService:
 
         # 4. Optional Health Appointments (if carefold_health installed)
         try:
-            from carefold_health.models import Appointment  # type: ignore
-            appt_stmt = select(Appointment)
-            if target_profile_ids is not None:
-                appt_stmt = appt_stmt.where(Appointment.profile_id.in_(target_profile_ids))
-            appts = (await self.db.execute(appt_stmt)).scalars().all()
-            for a in appts:
-                d = getattr(a, "domain", "health") or "health"
-                d_clean = d.strip().lower()
-                if d_clean in active_domains:
-                    dt = a.start_time
-                    if dt.tzinfo is None:
-                        dt = dt.replace(tzinfo=timezone.utc)
-                    end_dt = a.end_time
-                    if end_dt and end_dt.tzinfo is None:
-                        end_dt = end_dt.replace(tzinfo=timezone.utc)
-                    items.append(
-                        TimelineItem(
-                            id=a.id,
-                            domain=d_clean,  # type: ignore
-                            item_type="appointment",
-                            date_time=dt,
-                            end_time=end_dt,
-                            title=a.title or "Scheduled Appointment",
-                            description=getattr(a, "reason", None) or getattr(a, "provider_name", None),
-                            status=getattr(a, "status", "scheduled") or "scheduled",
-                            profile_id=a.profile_id,
-                            household_id=household_id,
-                            metadata={"provider_name": getattr(a, "provider_name", None)},
+            Appointment = resolve_optional_model("appointments", "Appointment")
+            if Appointment is not None:
+                appt_stmt = select(Appointment)
+                if target_profile_ids is not None:
+                    appt_stmt = appt_stmt.where(Appointment.profile_id.in_(target_profile_ids))
+                appts = (await self.db.execute(appt_stmt)).scalars().all()
+                for a in appts:
+                    d = getattr(a, "domain", "health") or "health"
+                    d_clean = d.strip().lower()
+                    if d_clean in active_domains:
+                        dt = a.start_time
+                        if dt.tzinfo is None:
+                            dt = dt.replace(tzinfo=timezone.utc)
+                        end_dt = a.end_time
+                        if end_dt and end_dt.tzinfo is None:
+                            end_dt = end_dt.replace(tzinfo=timezone.utc)
+                        items.append(
+                            TimelineItem(
+                                id=a.id,
+                                domain=d_clean,  # type: ignore
+                                item_type="appointment",
+                                date_time=dt,
+                                end_time=end_dt,
+                                title=a.title or "Scheduled Appointment",
+                                description=getattr(a, "reason", None) or getattr(a, "provider_name", None),
+                                status=getattr(a, "status", "scheduled") or "scheduled",
+                                profile_id=a.profile_id,
+                                household_id=household_id,
+                                metadata={"provider_name": getattr(a, "provider_name", None)},
+                            )
                         )
-                    )
         except (ImportError, Exception):
             pass
 

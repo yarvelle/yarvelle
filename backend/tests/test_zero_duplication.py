@@ -37,6 +37,8 @@ def test_zero_carefold_source_code_in_yarvelle():
         "venv",
         "__pycache__",
         ".pytest_cache",
+        ".import_linter_cache",
+        ".importlinter",
         "backend",
         "frontend",
         "agents",

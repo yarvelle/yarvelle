@@ -11,15 +11,17 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
-import React from 'react';
+'use client';
+
+import React, { use } from 'react';
 import { getPackUi } from '@/pack-registry.generated';
 
-export default async function PackRoutePage({
+export default function PackRoutePage({
   params,
 }: {
   params: Promise<{ profileId: string; pack: string; path: string[] }>;
 }) {
-  const { profileId, pack, path } = await params;
+  const { profileId, pack, path } = use(params);
   const packUi = getPackUi(pack);
 
   if (!packUi) {

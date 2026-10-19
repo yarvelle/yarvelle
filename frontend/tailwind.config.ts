@@ -12,9 +12,11 @@
  */
 
 import type { Config } from 'tailwindcss';
+import { yarvellePreset } from '@yarvelle/ui/tokens';
 
 const config: Config = {
-  darkMode: 'class',
+  presets: [yarvellePreset],
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],

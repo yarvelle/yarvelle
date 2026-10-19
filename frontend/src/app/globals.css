@@ -11,6 +11,8 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
+@import '@yarvelle/ui/styles.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -38,7 +40,7 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  color: var(--ui-fg, var(--foreground));
+  background: var(--ui-canvas, var(--background));
+  font-family: var(--ui-font-sans, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif);
 }

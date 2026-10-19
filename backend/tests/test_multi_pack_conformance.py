@@ -55,9 +55,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from carefold_health.models import Appointment
-from yarvelle.household.cross_links import CrossLinksService
-from yarvelle.household.schemas import CrossDomainLinkCreate
-from yarvelle.household.shred import ExportDeleteService
+from yarvelle_household.cross_links import CrossLinksService
+from yarvelle_household.schemas import CrossDomainLinkCreate
+from yarvelle_household.shred import ExportDeleteService
 from yarvelle.main import build_app
 from yarvelle_core.config import settings as core_settings
 from yarvelle_core.conformance import (

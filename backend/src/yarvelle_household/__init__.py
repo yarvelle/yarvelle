@@ -9,7 +9,7 @@
 #
 # Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
 
-"""Yarvelle Household Pack entry point."""
+"""Yarvelle Household Pack entry point and public exports."""
 
 from __future__ import annotations
 
@@ -17,6 +17,8 @@ from typing import List
 
 from yarvelle_core.pack.spec import PackEvalsSpec, PackSpec, RouterContribution
 from yarvelle_core.schemas.routing import RoutingHints
+from yarvelle_household.conflicts import ConflictDetector
+from yarvelle_household.cross_links import CrossLinksService
 from yarvelle_household.db.models import (
     CrossDomainLink,
     Household,
@@ -25,8 +27,12 @@ from yarvelle_household.db.models import (
     HouseholdMealPlan,
     HouseholdMember,
 )
+from yarvelle_household.governance import FamilyGovernanceService
+from yarvelle_household.router import router
 from yarvelle_household.routers import get_household_router_contributions
 from yarvelle_household.safety.policy import HouseholdSafetyPolicy
+from yarvelle_household.shred import ExportDeleteService
+from yarvelle_household.timeline import TimelineService, extract_caller_scopes, has_domain_read_access
 from yarvelle_household.tools import get_household_tool_specs
 
 __version__ = "0.1.0"
@@ -90,4 +96,21 @@ def get_pack() -> PackSpec:
     )
 
 
-__all__ = ["get_pack", "__version__"]
+__all__ = [
+    "get_pack",
+    "__version__",
+    "Household",
+    "HouseholdMember",
+    "HouseholdChore",
+    "HouseholdMealPlan",
+    "HouseholdActivity",
+    "CrossDomainLink",
+    "FamilyGovernanceService",
+    "TimelineService",
+    "CrossLinksService",
+    "ConflictDetector",
+    "ExportDeleteService",
+    "extract_caller_scopes",
+    "has_domain_read_access",
+    "router",
+]

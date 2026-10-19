@@ -37,7 +37,7 @@ from yarvelle_core.db.models import (
 )
 from yarvelle_core.storage.cas import read_cas_file
 from yarvelle_core.vault.dek import delete_profile_keys
-from yarvelle.household.models import CrossDomainLink, Household, HouseholdMember
+from yarvelle_household.db.models import CrossDomainLink, Household, HouseholdMember
 
 
 class ExportDeleteService:

@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from yarvelle.household.models import Household
+from yarvelle_household.db.models import Household
 
 
 AGE_BANDS = ("child_u13", "teen_13_17", "adult", "older_adult")

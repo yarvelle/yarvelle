@@ -45,12 +45,7 @@ export function YarvelleLogo({
   showWordmark = true,
   theme = 'auto',
 }: YarvelleLogoProps) {
-  const textColor =
-    theme === 'dark'
-      ? 'text-white'
-      : theme === 'light'
-      ? 'text-slate-900'
-      : 'text-slate-900 dark:text-white';
+  const textColor = theme === 'dark' ? 'text-white' : 'text-fg';
 
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>

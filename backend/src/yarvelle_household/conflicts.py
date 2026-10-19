@@ -20,8 +20,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from yarvelle_core.db.models import Profile, Reminder
-from yarvelle.household.models import Household, HouseholdMember
-from yarvelle.household.schemas import ConflictItem, ConflictResponse
+from yarvelle_household._dynamic import resolve_optional_model
+from yarvelle_household.db.models import Household, HouseholdMember
+from yarvelle_household.schemas import ConflictItem, ConflictResponse
 
 
 PREP_KEYWORDS = [
@@ -94,13 +95,14 @@ class ConflictDetector:
         # Fetch appointments (health or household)
         appts = []
         try:
-            from carefold_health.models import Appointment  # type: ignore
-            appt_stmt = select(Appointment).where(
-                Appointment.profile_id.in_(profile_ids),
-                Appointment.start_time >= now - timedelta(hours=6),
-                Appointment.start_time <= end_window,
-            )
-            appts = list((await self.db.execute(appt_stmt)).scalars().all())
+            Appointment = resolve_optional_model("appointments", "Appointment")
+            if Appointment is not None:
+                appt_stmt = select(Appointment).where(
+                    Appointment.profile_id.in_(profile_ids),
+                    Appointment.start_time >= now - timedelta(hours=6),
+                    Appointment.start_time <= end_window,
+                )
+                appts = list((await self.db.execute(appt_stmt)).scalars().all())
         except Exception:
             pass
 
@@ -127,12 +129,13 @@ class ConflictDetector:
         # Fetch school forms
         forms = []
         try:
-            from carefold_health.models import SchoolForm  # type: ignore
-            form_stmt = select(SchoolForm).where(
-                SchoolForm.profile_id.in_(profile_ids),
-                SchoolForm.status.in_(["draft", "pending_signature", "active"]),
-            )
-            forms = list((await self.db.execute(form_stmt)).scalars().all())
+            SchoolForm = resolve_optional_model("school_forms", "SchoolForm")
+            if SchoolForm is not None:
+                form_stmt = select(SchoolForm).where(
+                    SchoolForm.profile_id.in_(profile_ids),
+                    SchoolForm.status.in_(["draft", "pending_signature", "active"]),
+                )
+                forms = list((await self.db.execute(form_stmt)).scalars().all())
         except Exception:
             pass
 

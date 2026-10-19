@@ -11,58 +11,71 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
+'use client';
+
 import React from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@yarvelle/ui';
 import { definePackUi, type SlotContribution, type SlotProps, type PackUi } from '@yarvelle/ui/slots';
 
 // Health UI Slot Components
 export function VitalsCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="health-vitals-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Vitals & Biometrics</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Recorded</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Blood pressure, resting heart rate, glucose, and lab trends.</p>
-    </div>
+    <Card data-testid="health-vitals-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Vitals & Biometrics</CardTitle>
+          <Badge variant="success">Recorded</Badge>
+        </div>
+        <CardDescription>Blood pressure, resting heart rate, glucose, and lab trends.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function AppointmentsCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="health-appointments-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Upcoming Care & Visits</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">Scheduled</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Clinical specialist visits, prep dossiers, and follow-up checklists.</p>
-    </div>
+    <Card data-testid="health-appointments-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Upcoming Care & Visits</CardTitle>
+          <Badge variant="info">Scheduled</Badge>
+        </div>
+        <CardDescription>Clinical specialist visits, prep dossiers, and follow-up checklists.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function PreventiveCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="health-preventive-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Preventive Guidelines</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">USPSTF preventive screenings, annual physicals, and immunization tracking.</p>
-    </div>
+    <Card data-testid="health-preventive-card">
+      <CardHeader>
+        <CardTitle>Preventive Guidelines</CardTitle>
+        <CardDescription>USPSTF preventive screenings, annual physicals, and immunization tracking.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function SchoolFormsCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="health-school-forms-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Health & Immunization Forms</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Vaccination records, sports physical clearance, and camp health forms.</p>
-    </div>
+    <Card data-testid="health-school-forms-card">
+      <CardHeader>
+        <CardTitle>Health & Immunization Forms</CardTitle>
+        <CardDescription>Vaccination records, sports physical clearance, and camp health forms.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function ClinicalConsentSection({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="health-consent-section">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Clinical Assist Consents</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Patient consent verification and non-clinical informational boundaries.</p>
-    </div>
+    <Card data-testid="health-consent-section">
+      <CardHeader>
+        <CardTitle>Clinical Assist Consents</CardTitle>
+        <CardDescription>Patient consent verification and non-clinical informational boundaries.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 

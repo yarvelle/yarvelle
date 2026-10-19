@@ -11,61 +11,74 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
+'use client';
+
 import React from 'react';
+import { Card, CardHeader, CardTitle, CardDescription, Badge } from '@yarvelle/ui';
 import { definePackUi, type SlotContribution, type SlotProps, type PackUi } from '@yarvelle/ui/slots';
 
 // Education Slot Components
 export function AcademicCalendarCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="education-calendar-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">School Calendar & Events</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">Term 1</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Class schedules, school holidays, exam blocks, and parent conferences.</p>
-    </div>
+    <Card data-testid="education-calendar-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>School Calendar & Events</CardTitle>
+          <Badge variant="info">Term 1</Badge>
+        </div>
+        <CardDescription>Class schedules, school holidays, exam blocks, and parent conferences.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function AssignmentsCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="education-assignments-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Assignments & Due Dates</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">In Progress</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Track homework deadlines and project milestones with academic integrity.</p>
-    </div>
+    <Card data-testid="education-assignments-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Assignments & Due Dates</CardTitle>
+          <Badge variant="success">In Progress</Badge>
+        </div>
+        <CardDescription>Track homework deadlines and project milestones with academic integrity.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function ReadingLogCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="education-reading-card">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-slate-900 dark:text-slate-100">Reading & Growth Log</h3>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Streak Active</span>
-      </div>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Track daily reading chapters, personal reflections, and milestone growth.</p>
-    </div>
+    <Card data-testid="education-reading-card">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>Reading & Growth Log</CardTitle>
+          <Badge variant="warn">Streak Active</Badge>
+        </div>
+        <CardDescription>Track daily reading chapters, personal reflections, and milestone growth.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function StudyQuizHelperCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="education-study-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Practice Quizzes & Flashcards</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Interactive concept review, flashcards, and practice quiz exercises.</p>
-    </div>
+    <Card data-testid="education-study-card">
+      <CardHeader>
+        <CardTitle>Practice Quizzes & Flashcards</CardTitle>
+        <CardDescription>Interactive concept review, flashcards, and practice quiz exercises.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 
 export function SchoolFormsCard({ profileId }: SlotProps) {
   return (
-    <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm" data-testid="education-forms-card">
-      <h3 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">School & Field Trip Forms</h3>
-      <p className="text-sm text-slate-600 dark:text-slate-400">Guardian-reviewed drafts for permission slips, sports waivers, and registration.</p>
-    </div>
+    <Card data-testid="education-forms-card">
+      <CardHeader>
+        <CardTitle>School & Field Trip Forms</CardTitle>
+        <CardDescription>Guardian-reviewed drafts for permission slips, sports waivers, and registration.</CardDescription>
+      </CardHeader>
+    </Card>
   );
 }
 

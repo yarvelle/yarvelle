@@ -18,9 +18,9 @@ from typing import Dict, List, Optional, Set
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from yarvelle.household.models import CrossDomainLink, Household, HouseholdMember
-from yarvelle.household.schemas import CrossDomainLinkCreate, CrossDomainLinkResponse
-from yarvelle.household.timeline import has_domain_read_access
+from yarvelle_household.db.models import CrossDomainLink, Household, HouseholdMember
+from yarvelle_household.schemas import CrossDomainLinkCreate, CrossDomainLinkResponse
+from yarvelle_household.timeline import has_domain_read_access
 
 
 VALID_LINK_TYPES = frozenset({
