@@ -18,8 +18,8 @@ importers:
   frontend:
     dependencies:
       '@carefold/health-ui':
-        specifier: file:../../carefold/frontend/packaging/health-ui
-        version: file:../carefold/frontend/packaging/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: file:../../carefold/frontend/src/health-ui
+        version: file:../carefold/frontend/src/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@yarvelle/ui':
         specifier: file:../../yarvelle-core/frontend
         version: file:../yarvelle-core/frontend(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -175,8 +175,8 @@ packages:
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
 
-  '@carefold/health-ui@file:../carefold/frontend/packaging/health-ui':
-    resolution: {directory: ../carefold/frontend/packaging/health-ui, type: directory}
+  '@carefold/health-ui@file:../carefold/frontend/src/health-ui':
+    resolution: {directory: ../carefold/frontend/src/health-ui, type: directory}
     peerDependencies:
       react: '>=19.0.0'
       react-dom: '>=19.0.0'
@@ -1645,9 +1645,8 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@carefold/health-ui@file:../carefold/frontend/packaging/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@carefold/health-ui@file:../carefold/frontend/src/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
-      '@yarvelle/ui': file:../yarvelle-core/frontend(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
 

@@ -110,12 +110,12 @@ def test_wheel_bundles_agents_skills_and_entry_points(tmp_path: Path):
         assert len(entry_point_files) > 0, "No entry_points.txt found in wheel"
 
         ep_content = zf.read(entry_point_files[0]).decode("utf-8")
-        assert "finance = yarvelle_finance:get_pack" in ep_content
-        assert "education = yarvelle_education:get_pack" in ep_content
-        assert "household = yarvelle_household:get_pack" in ep_content
+        assert "finance = yarvelle.finance:get_pack" in ep_content
+        assert "education = yarvelle.education:get_pack" in ep_content
+        assert "household = yarvelle.household:get_pack" in ep_content
 
         # 4. Verify packages bundled
         assert any(n.startswith("yarvelle/") for n in namelist)
-        assert any(n.startswith("yarvelle_finance/") for n in namelist)
-        assert any(n.startswith("yarvelle_education/") for n in namelist)
-        assert any(n.startswith("yarvelle_household/") for n in namelist)
+        assert any(n.startswith("yarvelle/finance/") for n in namelist)
+        assert any(n.startswith("yarvelle/education/") for n in namelist)
+        assert any(n.startswith("yarvelle/household/") for n in namelist)

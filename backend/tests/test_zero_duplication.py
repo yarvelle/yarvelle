@@ -52,3 +52,17 @@ def test_zero_carefold_source_code_in_yarvelle():
     for item in root.iterdir():
         if item.is_dir():
             assert item.name in permitted_dirs, f"Unpermitted directory found in Yarvelle root: {item.name}"
+
+    # 4. Strictly ONE package folder inside backend/src/ (`yarvelle`)
+    src_dir = root / "backend" / "src"
+    pkg_dirs = [p.name for p in src_dir.iterdir() if p.is_dir() and not p.name.startswith(".") and not p.name.endswith(".egg-info")]
+    assert pkg_dirs == ["yarvelle"], f"Expected only ['yarvelle'] in backend/src/, found: {pkg_dirs}"
+
+    # 5. Zero frontend `ui:` keys in backend pack.yaml files
+    import yaml
+
+    for domain in ("finance", "education", "household"):
+        pack_yaml = src_dir / "yarvelle" / domain / "pack.yaml"
+        data = yaml.safe_load(pack_yaml.read_text(encoding="utf-8"))
+        assert "ui" not in data, f"Backend {pack_yaml} must not contain frontend 'ui' definitions"
+

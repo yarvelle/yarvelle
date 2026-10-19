@@ -1,36 +1,34 @@
 [importlinter]
 root_packages =
-    yarvelle_finance
-    yarvelle_education
-    yarvelle_household
+    yarvelle
 include_external_packages = True
 
 [importlinter:contract:finance_isolation]
 name = Finance pack must not import other packs or health internals
 type = forbidden
 source_modules =
-    yarvelle_finance
+    yarvelle.finance
 forbidden_modules =
-    yarvelle_education
-    yarvelle_household
-    carefold_health
+    yarvelle.education
+    yarvelle.household
+    carefold
 
 [importlinter:contract:education_isolation]
 name = Education pack must not import other packs or health internals
 type = forbidden
 source_modules =
-    yarvelle_education
+    yarvelle.education
 forbidden_modules =
-    yarvelle_finance
-    yarvelle_household
-    carefold_health
+    yarvelle.finance
+    yarvelle.household
+    carefold
 
 [importlinter:contract:household_isolation]
 name = Household pack must not import other packs or health internals
 type = forbidden
 source_modules =
-    yarvelle_household
+    yarvelle.household
 forbidden_modules =
-    yarvelle_finance
-    yarvelle_education
-    carefold_health
+    yarvelle.finance
+    yarvelle.education
+    carefold

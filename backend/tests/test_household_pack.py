@@ -17,9 +17,9 @@ from yarvelle_core.db.base import Base
 from yarvelle_core.db.models import Profile
 from yarvelle_core.db.session import get_engine, get_session_factory
 from yarvelle_core.pack.validator import validate_pack_spec, validate_pack_yaml_file
-import yarvelle_household
-from yarvelle_household.safety.policy import HouseholdSafetyPolicy
-from yarvelle_household.tools import (
+import yarvelle.household as yarvelle_household
+from yarvelle.household.safety.policy import HouseholdSafetyPolicy
+from yarvelle.household.tools import (
     execute_activity_schedule,
     execute_manage_chores,
     execute_manage_meal_plan,
@@ -53,8 +53,8 @@ def test_household_pack_spec_valid():
 
 
 def test_household_pack_manifest_valid():
-    """Verifies that src/yarvelle_household/pack.yaml passes validator."""
-    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle_household" / "pack.yaml"
+    """Verifies that src/yarvelle/household/pack.yaml passes validator."""
+    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle" / "household" / "pack.yaml"
     manifest = validate_pack_yaml_file(str(pack_yaml))
     assert manifest.id == "household"
     assert manifest.domain == "household"

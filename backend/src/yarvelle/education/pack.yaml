@@ -1,0 +1,115 @@
+pack_api: 1
+id: education
+name: Yarvelle Education Pack
+version: 0.1.0
+domain: education
+requires_core: ">=0.1.0,<0.2.0"
+requires_packs: []
+license: "PolyForm-Noncommercial-1.0.0"
+maintainers:
+  - "yarvelle/education-maintainers"
+risk_tier_max: "T2"
+
+scopes:
+  - id: education.*
+    description: "All student education and learning coordination data"
+    consent: required
+    sensitivity: confidential
+  - id: education.assignments
+    description: "Homework assignments, school projects, and due dates"
+    consent: optional
+    sensitivity: confidential
+  - id: education.milestones
+    description: "Child developmental progress and learning milestones"
+    consent: optional
+    sensitivity: confidential
+  - id: education.reading
+    description: "Daily reading practice logs and book tracking"
+    consent: optional
+    sensitivity: internal
+  - id: education.forms
+    description: "Draft prefilled permission slips and school emergency forms"
+    consent: required
+    sensitivity: pii
+  - id: education.study
+    description: "Interactive practice quizzes and conceptual learning"
+    consent: optional
+    sensitivity: internal
+  - id: education.calendar
+    description: "Synchronized academic terms and course schedules"
+    consent: optional
+    sensitivity: internal
+
+reads:
+  - id: health.clinical
+    level: read
+    purpose: "Access child immunization dates and exam summaries to draft school and camp health forms"
+    optional: true
+
+provides:
+  agents_dir: agents/
+  skills_dir: skills/
+  tools:
+    - id: school_assignment_sync
+      entry: yarvelle.education.tools:SPEC_SCHOOL_ASSIGNMENT_SYNC
+      scopes: {write: [education.assignments]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: milestone_tracker
+      entry: yarvelle.education.tools:SPEC_MILESTONE_TRACKER
+      scopes: {write: [education.milestones]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: manage_assignments
+      entry: yarvelle.education.tools:SPEC_MANAGE_ASSIGNMENTS
+      scopes: {write: [education.assignments]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: manage_reading_logs
+      entry: yarvelle.education.tools:SPEC_MANAGE_READING_LOGS
+      scopes: {write: [education.reading]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: manage_school_forms
+      entry: yarvelle.education.tools:SPEC_MANAGE_SCHOOL_FORMS
+      scopes: {write: [education.forms]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: study_quiz_helper
+      entry: yarvelle.education.tools:SPEC_STUDY_QUIZ_HELPER
+      scopes: {read: [education.assignments]}
+      tier: read
+      data_flows: {egress: []}
+  routers:
+    - entry: yarvelle.education.routers.assignments:router
+      prefix: "/api/v1/education/assignments"
+      require_scope: {id: education.assignments, level: read}
+    - entry: yarvelle.education.routers.milestones:router
+      prefix: "/api/v1/education/milestones"
+      require_scope: {id: education.milestones, level: read}
+    - entry: yarvelle.education.routers.reading:router
+      prefix: "/api/v1/education/reading"
+      require_scope: {id: education.reading, level: read}
+    - entry: yarvelle.education.routers.forms:router
+      prefix: "/api/v1/education/forms"
+      require_scope: {id: education.forms, level: read}
+  jobs: []
+  safety_policy: "yarvelle.education.safety:EducationSafetyPolicy"
+  routing:
+    description: "School navigation, homework coaching, reading logs, and academic coordination"
+    default_agent: "education-navigator"
+    patterns: "resources/routing_patterns.yaml"
+  prompts_dir: "resources/prompts/"
+  locales_dir: "resources/locales/"
+  connectors_dir: "connectors/"
+  evals: "evals/golden.jsonl"
+
+migrations:
+  branch: education
+  version_table: alembic_version_education
+  location: src/yarvelle/education/db/migrations
+  depends_on_core: "0011_scopes"
+
+compat:
+  python: ">=3.12"
+  data_dir_policy: shared

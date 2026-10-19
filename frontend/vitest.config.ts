@@ -25,7 +25,7 @@ export default defineConfig({
       '@yarvelle/ui/slots': path.resolve(__dirname, '../../yarvelle-core/frontend/src/slots/index.ts'),
       '@yarvelle/ui/tokens': path.resolve(__dirname, '../../yarvelle-core/frontend/src/tokens/index.ts'),
       '@yarvelle/ui': path.resolve(__dirname, '../../yarvelle-core/frontend/src/index.ts'),
-      '@carefold/health-ui': path.resolve(__dirname, '../../carefold/frontend/packaging/health-ui/dist/index.js'),
+      '@carefold/health-ui': path.resolve(__dirname, '../../carefold/frontend/src/health-ui/dist/index.js'),
     },
   },
 });

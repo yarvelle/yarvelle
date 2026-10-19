@@ -13,9 +13,9 @@
 
 import pytest
 from yarvelle_core.engine.safety_policy import SafetyContext
-from yarvelle_finance.safety.policy import FinanceSafetyPolicy
-from yarvelle_education.safety.policy import EducationSafetyPolicy
-from yarvelle_household.safety.policy import HouseholdSafetyPolicy
+from yarvelle.finance.safety.policy import FinanceSafetyPolicy
+from yarvelle.education.safety.policy import EducationSafetyPolicy
+from yarvelle.household.safety.policy import HouseholdSafetyPolicy
 
 
 class TestPackSafetyPolicies:

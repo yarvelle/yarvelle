@@ -55,9 +55,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from carefold_health.models import Appointment
-from yarvelle_household.cross_links import CrossLinksService
-from yarvelle_household.schemas import CrossDomainLinkCreate
-from yarvelle_household.shred import ExportDeleteService
+from yarvelle.household.cross_links import CrossLinksService
+from yarvelle.household.schemas import CrossDomainLinkCreate
+from yarvelle.household.shred import ExportDeleteService
 from yarvelle.main import build_app
 from yarvelle_core.config import settings as core_settings
 from yarvelle_core.conformance import (
@@ -80,9 +80,9 @@ from yarvelle_core.scope.context import (
     require_scope,
     scope_context,
 )
-from yarvelle_education.db.models import EducationAssignment
-from yarvelle_finance.db.models import FinanceAccount
-from yarvelle_household.db.models import HouseholdChore
+from yarvelle.education.db.models import EducationAssignment
+from yarvelle.finance.db.models import FinanceAccount
+from yarvelle.household.db.models import HouseholdChore
 
 # Detach global listeners from base Session so un-scoped household/pack unit tests are not polluted
 if event.contains(Session, "before_flush", _enforce_before_flush):

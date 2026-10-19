@@ -18,9 +18,9 @@ from yarvelle_core.db.models import Profile
 from yarvelle_core.db.session import get_engine, get_session_factory
 from yarvelle_core.engine.safety_policy import SafetyContext
 from yarvelle_core.pack.validator import validate_pack_spec, validate_pack_yaml_file
-import yarvelle_education
-from yarvelle_education.safety.policy import EducationSafetyPolicy
-from yarvelle_education.tools import (
+import yarvelle.education as yarvelle_education
+from yarvelle.education.safety.policy import EducationSafetyPolicy
+from yarvelle.education.tools import (
     execute_manage_assignments,
     execute_manage_reading_logs,
     execute_manage_school_forms,
@@ -59,8 +59,8 @@ def test_education_pack_spec_valid():
 
 
 def test_education_pack_manifest_valid():
-    """Verifies that src/yarvelle_education/pack.yaml passes validator."""
-    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle_education" / "pack.yaml"
+    """Verifies that src/yarvelle/education/pack.yaml passes validator."""
+    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle" / "education" / "pack.yaml"
     manifest = validate_pack_yaml_file(str(pack_yaml))
     assert manifest.id == "education"
     assert manifest.domain == "education"

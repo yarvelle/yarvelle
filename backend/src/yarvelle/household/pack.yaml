@@ -1,0 +1,109 @@
+pack_api: 1
+id: household
+name: Yarvelle Household Pack
+version: 0.1.0
+domain: household
+requires_core: ">=0.1.0,<0.2.0"
+requires_packs: []
+license: "PolyForm-Noncommercial-1.0.0"
+maintainers:
+  - "yarvelle/household-maintainers"
+risk_tier_max: "T2"
+
+scopes:
+  - id: household.*
+    description: "All household routines, chores, meals, and family governance"
+    consent: required
+    sensitivity: confidential
+  - id: household.chores
+    description: "Household chore rotations, completion streaks, and routines"
+    consent: optional
+    sensitivity: internal
+  - id: household.meals
+    description: "Weekly family meal planning, allergen rules, and groceries"
+    consent: optional
+    sensitivity: internal
+  - id: household.activities
+    description: "Extracurricular activities, sports, clubs, and schedules"
+    consent: optional
+    sensitivity: internal
+  - id: household.maintenance
+    description: "Home maintenance, warranties, and service schedules"
+    consent: optional
+    sensitivity: internal
+  - id: household.travel
+    description: "Family itineraries, travel checklists, and packing logs"
+    consent: optional
+    sensitivity: internal
+  - id: household.calendar
+    description: "Synchronized household calendar events and routines"
+    consent: optional
+    sensitivity: internal
+  - id: household.governance
+    description: "Family profile governance, guardian approvals, and privacy"
+    consent: required
+    sensitivity: confidential
+
+reads:
+  - id: health.paperwork
+    level: read
+    purpose: "Cross-domain family schedule and bill coordination"
+    optional: true
+  - id: finance.bills
+    level: read
+    purpose: "Cross-domain payment deadline clustering and conflict detection"
+    optional: true
+  - id: education.calendar
+    level: read
+    purpose: "Cross-domain family schedule collision and deadline conflict detection"
+    optional: true
+
+provides:
+  agents_dir: agents/
+  skills_dir: skills/
+  tools:
+    - id: activity_schedule
+      entry: yarvelle.household.tools:SPEC_ACTIVITY_SCHEDULE
+      scopes: {write: [household.activities]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: manage_chores
+      entry: yarvelle.household.tools:SPEC_MANAGE_CHORES
+      scopes: {write: [household.chores]}
+      tier: write_local
+      data_flows: {egress: []}
+    - id: manage_meal_plan
+      entry: yarvelle.household.tools:SPEC_MANAGE_MEAL_PLAN
+      scopes: {write: [household.meals]}
+      tier: write_local
+      data_flows: {egress: []}
+  routers:
+    - entry: yarvelle.household.routers.chores:router
+      prefix: "/api/v1/household/chores"
+      require_scope: {id: household.chores, level: read}
+    - entry: yarvelle.household.routers.meals:router
+      prefix: "/api/v1/household/meals"
+      require_scope: {id: household.meals, level: read}
+    - entry: yarvelle.household.routers.activities:router
+      prefix: "/api/v1/household/activities"
+      require_scope: {id: household.activities, level: read}
+  jobs: []
+  safety_policy: "yarvelle.household.safety:HouseholdSafetyPolicy"
+  routing:
+    description: "Household routines, chore rotation, meals, and family stewardship"
+    default_agent: "household-steward"
+    patterns: "resources/routing_patterns.yaml"
+  prompts_dir: "resources/prompts/"
+  locales_dir: "resources/locales/"
+  connectors_dir: "connectors/"
+  evals: "evals/golden.jsonl"
+
+migrations:
+  branch: household
+  version_table: alembic_version_household
+  location: src/yarvelle/household/db/migrations
+  depends_on_core: "0011_scopes"
+
+compat:
+  python: ">=3.12"
+  data_dir_policy: shared

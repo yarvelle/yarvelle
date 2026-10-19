@@ -164,7 +164,7 @@ def build_app(
 
     # Household & Cross-Domain router (Step Y3)
     try:
-        from yarvelle_household.router import router as household_router
+        from yarvelle.household.router import router as household_router
         master_router.include_router(household_router, prefix="/household", tags=["Household"])
     except Exception as e:
         logger.debug("household_router_deferred", error=str(e))

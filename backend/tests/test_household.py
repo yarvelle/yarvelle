@@ -26,13 +26,13 @@ from yarvelle_core.auth.ports import UserProfile
 from yarvelle_core.db.base import Base
 from yarvelle_core.db.models import Attachment, AuditEventRecord, Note, Profile, Reminder
 from carefold_health.models import Appointment, SchoolForm
-from yarvelle_household.conflicts import ConflictDetector
-from yarvelle_household.cross_links import CrossLinksService
-from yarvelle_household.governance import FamilyGovernanceService
-from yarvelle_household.db.models import CrossDomainLink, Household, HouseholdMember
-from yarvelle_household.schemas import CrossDomainLinkCreate
-from yarvelle_household.shred import ExportDeleteService
-from yarvelle_household.timeline import TimelineService, extract_caller_scopes
+from yarvelle.household.conflicts import ConflictDetector
+from yarvelle.household.cross_links import CrossLinksService
+from yarvelle.household.governance import FamilyGovernanceService
+from yarvelle.household.db.models import CrossDomainLink, Household, HouseholdMember
+from yarvelle.household.schemas import CrossDomainLinkCreate
+from yarvelle.household.shred import ExportDeleteService
+from yarvelle.household.timeline import TimelineService, extract_caller_scopes
 
 
 @pytest.fixture

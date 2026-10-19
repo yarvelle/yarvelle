@@ -13,9 +13,9 @@
 
 import pytest
 from yarvelle_core.pack.validator import validate_pack_spec, validate_pack_yaml_file
-import yarvelle_finance
-from yarvelle_finance.safety.policy import FinanceSafetyPolicy
-from yarvelle_finance.tools import (
+import yarvelle.finance as yarvelle_finance
+from yarvelle.finance.safety.policy import FinanceSafetyPolicy
+from yarvelle.finance.tools import (
     execute_categorize_expense,
     execute_list_bills,
     execute_parse_statement,
@@ -40,9 +40,9 @@ def test_finance_pack_spec_valid():
 
 
 def test_finance_pack_manifest_valid():
-    """Verifies that src/yarvelle_finance/pack.yaml passes validator."""
+    """Verifies that src/yarvelle/finance/pack.yaml passes validator."""
     from pathlib import Path
-    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle_finance" / "pack.yaml"
+    pack_yaml = Path(__file__).resolve().parent.parent / "src" / "yarvelle" / "finance" / "pack.yaml"
     manifest = validate_pack_yaml_file(str(pack_yaml))
     assert manifest.id == "finance"
     assert manifest.domain == "finance"

@@ -21,6 +21,8 @@ class CustomBuildHook(BuildHookInterface):
     """Hatchling build hook force-including top-level agents and skills into yarvelle/_content/."""
 
     def initialize(self, version: str, build_data: Dict[str, Any]) -> None:
+        if version == "editable":
+            return
         root = Path(self.root).parent  # top-level repo root
         force_include = build_data.setdefault("force_include", {})
 
@@ -31,3 +33,4 @@ class CustomBuildHook(BuildHookInterface):
             force_include[str(agents_dir)] = "yarvelle/_content/agents"
         if skills_dir.is_dir():
             force_include[str(skills_dir)] = "yarvelle/_content/skills"
+
