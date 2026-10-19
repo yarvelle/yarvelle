@@ -25,9 +25,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@carefold/health-ui": [
-        "./src/health-ui/index.tsx"
       ]
     }
   },

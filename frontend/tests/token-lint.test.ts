@@ -31,7 +31,7 @@ function getFilesRecursively(dir: string, ext = ['.ts', '.tsx']): string[] {
 }
 
 const srcDir = path.resolve(__dirname, '../src');
-const slotDirs = ['finance', 'education', 'household', 'health-ui'];
+const slotDirs = ['finance', 'education', 'household'];
 const slotFiles = slotDirs.flatMap((d) => getFilesRecursively(path.join(srcDir, d)));
 
 describe('GU3 Token Lint & Architectural Purity (ORIGINAL_REQUEST §R3)', () => {
