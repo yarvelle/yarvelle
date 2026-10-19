@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "school-forms",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "04cfa8dc877687086d69ed0e4c3ed80b6daa555941a0d0ae6a59085bc8719f8d",
+    "references/guidelines.md": "9886b0783c8ed91775f9fbf7af62a86c885e23b207f7f9179328d29c973526b0",
+    "SKILL.md": "950746b7599d1e3bc894ec83349038d34d5fbe02efde341eaf7590f068e97956"
+  },
+  "signature": "3e8317726e69e70163e6e77aa3ac0901466d94f06ded838022dd7c8a8937058fa0d782a1907962160f828ad59950b76197e4808635cdc6d0783c82928180e403"
+}

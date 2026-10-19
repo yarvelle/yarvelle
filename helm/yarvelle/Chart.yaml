@@ -1,0 +1,6 @@
+apiVersion: v2
+name: yarvelle
+description: Yarvelle - Privacy-preserving local-first personal and family AI assistant
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

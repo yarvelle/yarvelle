@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "chore-rotation",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "d61c9cdb3e0d4812ac1d74c215776830e8fa46816ac9071b9ece04973a3ae554",
+    "references/guidelines.md": "329a5d43ef306ddd6163690ac863c23e1bd47e13febb903eb1e789424896fdcf",
+    "SKILL.md": "120ded057ddb9e298c2bac8e1e68fb35d4629355a18911f74423bb6e4b942a1b"
+  },
+  "signature": "e8abf2b8a01eb778d43d4a0e98eabdf2ae9fb118786b0abe34ab7eee4e9323006164119581e4478df3331cd9c9abb5ad3f6771072dd4c38b31b46146754e2508"
+}

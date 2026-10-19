@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "study-quiz-helper",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "cd3b3ccbaee6f2fedf3c6c61a47bc7f04fe6ce07fc0499b3abe00fd7898a70b5",
+    "references/guidelines.md": "449de4230e62fc571ae2b54c9785f4e2af988ce979e4864b63682050e41c917d",
+    "SKILL.md": "98bed6ec8c330a0ff33b5c2c9f37160a93eafd51ee1a5daaded121d57967f3e4"
+  },
+  "signature": "cc7766b2afac2e59d0d027d4a87a3f0879f87b778d4679276784019f15eed46f04f7d03b9e5e6aaea442066ea1e711e6f385d0b0f2156abda6ba3c60d6a2e603"
+}

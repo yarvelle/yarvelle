@@ -1,0 +1,63 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: study-companion
+title: Study Companion
+version: 0.1.0
+license: PolyForm-Noncommercial-1.0.0 + Yarvelle Additional Terms
+care_stages:
+  - daily_living
+target_audience:
+  - teen_13_17
+  - guardian
+  - adult
+tags:
+  - study
+  - tutoring
+  - flashcards
+  - quiz
+  - assignments
+  - high-school
+icon: BookOpen
+maturity: stable
+hidden: false
+domain: education
+category: study
+risk_class: education
+min_age_band: teen_13_17
+yarvelle:
+  risk_tier: T1
+  domain: education
+  data_scopes:
+    read:
+      - education.assignments
+      - education.study_notes
+    write:
+      - education.study_notes
+  audiences:
+    - teen_13_17
+    - guardian
+    - adult
+  egress: []
+  actions:
+    - generate_practice_quiz
+    - create_flashcards
+  forbidden:
+    - complete_graded_work
+    - write_student_essay
+    - solve_test_problems
+    - diagnose_learning_disability
+    - rank_child
+    - contact_minor
+  evals: evals/golden.jsonl
+  review:
+    domain_reviewer: required
+    last_review: 2026-10-18

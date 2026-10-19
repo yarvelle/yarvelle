@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "activity-tracker",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "c0c03f14336efa5ca4b9db2a46c39d232178d016e73bda70f70ac2af6b998412",
+    "references/guidelines.md": "6643160252a1badee9dd3446c5235c10f313002ca6f303239f1cb4dba8f65a2c",
+    "SKILL.md": "3db344fc1a73974f5ff6f5a3dc1199ec27e71c29a96ee2798ae134353e3fab10"
+  },
+  "signature": "7bf251517778175b7a197348dbe05454076606dac13ddfea914493f014e775aafb751a7d95f116a953b6d4182ff737a8e7b37b4d556f63034b268a46b12a6b0f"
+}

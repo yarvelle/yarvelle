@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "meal-planning",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "ce72251cd3cc7b5673d6572628ca2ef94c43a1c2f84d414b8eaa169bb8ba0cf6",
+    "references/guidelines.md": "7ff2b8909e2538076960647f39071f947e979e1dbd35a41ae5dc557a0070bb0d",
+    "SKILL.md": "b0c332cae1151ed0ccd8691e6da1f843de621721a3c25f79396df58ae1ff7e94"
+  },
+  "signature": "f89fa730a409666f27df6b24f887536dcc125686e1c1daa473231fc4e415f8651859db8c9e194664f21f96571c97c07243ca00dc9ce1b826b64522c13a51f603"
+}

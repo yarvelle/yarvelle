@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: spectrayan/yarvelle
+  pullPolicy: IfNotPresent
+  tag: "0.1.0"
+
+service:
+  type: ClusterIP
+  port: 8000
+
+env:
+  YARVELLE_HOST: "0.0.0.0"
+  YARVELLE_PORT: "8000"
+  YARVELLE_AUTH_PROVIDER: "local"
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi

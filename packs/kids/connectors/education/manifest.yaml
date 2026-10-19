@@ -1,0 +1,82 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: school-lms-connector
+version: 0.1.0
+name: School LMS & CalDAV Sync Connector
+description: Read-only synchronization for school assignments, homework deadlines, and school calendar events (.ics / CalDAV).
+categories:
+  - education
+  - school
+  - calendar
+  - assignments
+entrypoint: connectors.education.connector:SchoolSyncConnector
+data_flows:
+  allowed_hosts:
+    - canvas.instructure.com
+    - classroom.googleapis.com
+    - caldav.schooldistrict.org
+    - localhost
+  allowed_schemes:
+    - https
+    - http
+  allowed_ports:
+    - 443
+    - 8443
+    - 8000
+  egress_direction: egress_only
+  pii_types_transferred:
+    - student_calendar
+    - assignment_schedule
+auth:
+  type: oauth2
+  pkce: true
+  client_source: byo
+  token_rotation: true
+  rotating_refresh: true
+  scopes:
+    - education.assignments
+    - education.calendar
+    - education.announcements
+  scope_details:
+    - scope: education.assignments
+      description: Read-only access to course assignments and due dates
+    - scope: education.calendar
+      description: Read-only access to school calendar events and schedules
+    - scope: education.announcements
+      description: Read-only access to course announcements and notices
+data_scopes:
+  read:
+    - education.assignments
+    - education.calendar
+  write: []
+tools:
+  - name: school_list_assignments
+    description: Retrieves upcoming assignments, projects, and due dates for a student.
+    risk_class: read_only
+  - name: school_sync_calendar
+    description: Synchronizes school calendar events and detects schedule conflicts with family events.
+    risk_class: read_only
+  - name: school_extract_forms
+    description: Extracts permission slips and school form requirements as draft prefill templates.
+    risk_class: read_only
+trust:
+  publisher: Spectrayan
+  verified: true
+  sandbox_level: strict
+  trust_level: untrusted
+policy:
+  rate_limit_rpm: 60
+  timeout_seconds: 30.0
+  retry_max_attempts: 3
+terms:
+  license: Apache-2.0
+  ai_use_allowed: true

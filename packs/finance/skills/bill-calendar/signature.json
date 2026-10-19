@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "bill-calendar",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "65011a22ca73acb6faa3aae6d70df419af318344bb9e70e298da48e6f8fea8aa",
+    "references/guidelines.md": "df86a088c62d01cada57b318e6698e5ea9499e3258cecb941301f0c721c83fd8",
+    "SKILL.md": "b8b3fdcde08b68116daaed370b8b6c56946f619474e9424d9fb041705af557bc"
+  },
+  "signature": "99419780723b390c3b2cd97daca428758842cae4a847ba38eecf041ef17de0ca8cc0aa31ec51340a7723475b519efc44d1f24c39a91ce6720235d09b80cf6103"
+}

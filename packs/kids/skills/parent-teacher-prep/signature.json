@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "parent-teacher-prep",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "30e4a93e8ac64241b4d843902c02e667e8f2012d98a846d4f30d28c27a0c9441",
+    "references/guidelines.md": "68320a6a892131de3567927c3218bbaa31ed45d078d149f99b5fe9d7a6ace602",
+    "SKILL.md": "648de87106b7dea0b27f1462e15ee2473b88ab93a8fccbf0324d50592ee0b41f"
+  },
+  "signature": "1c0b1e6cf370970139feabce459599366be873b8b7e58056f8c01fc0057de768400ff892326fa0b58c15abdbac8db9b5d9b39581a98b40655905e4bd5a671d0c"
+}

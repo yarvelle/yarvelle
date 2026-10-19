@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "household-steward",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "agent.yaml": "99c43144bc347c98b9ee9a2b18a40a9aaaffca9e8bdcc46caf1411820285893c",
+    "evals/golden.jsonl": "28d9420c37bc4b1e1d66003b2d52b755121921251ea57fdd108d7c3007d8a2b5",
+    "metadata.yaml": "91691af50a4902c1e596685184400bf8d1b4dff5c490b789795c1c72802cd2a1",
+    "persona.md": "09fff55c3eb8259f82ca5996ae409e9fbf71a6d6882ccbfd5421b1bf8e97fa35",
+    "README.md": "6dcbe44b4de338a743f67ffc98bbcb77edb67b2b837ee7fb6f9517339cd4bc49",
+    "starters.json": "090c691bde1be736049a1bc20830eaeb8529c93ac8066cf0afe3dcc2079b3b62"
+  },
+  "signature": "d01a0153358b52bfb5b99b9eb431eaf556b55d115b810d9d56155c79634f2b45d55b308a74e74631cd239a9ac431c3e89657e9bd7ea70a9a38a830ad0f0b190a"
+}

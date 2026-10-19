@@ -1,0 +1,74 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: household-steward
+title: Household Steward
+version: 0.1.0
+license: PolyForm-Noncommercial-1.0.0 + Yarvelle Additional Terms
+care_stages:
+  - daily_living
+target_audience:
+  - adult
+  - guardian
+  - caregiver
+  - teen_13_17
+tags:
+  - household
+  - chores
+  - calendar
+  - meal-planning
+  - home-maintenance
+  - travel
+  - caregiver-handover
+icon: Home
+maturity: stable
+hidden: false
+domain: household
+category: household
+risk_class: wellness
+yarvelle:
+  risk_tier: T1
+  domain: household
+  data_scopes:
+    read:
+      - household.calendar
+      - household.chores
+      - household.meals
+      - household.maintenance
+      - household.travel
+      - household.contacts
+      - health.allergies
+    write:
+      - household.chores
+      - household.meals
+      - household.maintenance
+      - household.travel
+      - household.contacts
+      - household.notes
+  audiences:
+    - adult
+    - guardian
+    - caregiver
+    - teen_13_17
+  egress: []
+  actions:
+    - draft_caregiver_handover
+    - draft_household_message
+  forbidden:
+    - covert_monitoring
+    - track_family_location
+    - read_private_messages
+    - send_message_without_approval
+    - modify_clinical_records
+  evals: evals/golden.jsonl
+  review:
+    domain_reviewer: required
+    last_review: 2026-10-18

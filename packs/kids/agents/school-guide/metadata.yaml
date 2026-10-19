@@ -1,0 +1,69 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: education-navigator
+title: Education Navigator
+version: 0.1.0
+license: PolyForm-Noncommercial-1.0.0 + Yarvelle Additional Terms
+care_stages:
+  - daily_living
+target_audience:
+  - guardian
+  - adult
+  - teen_13_17
+tags:
+  - education
+  - school
+  - permission-slips
+  - assignments
+  - reading-log
+  - parent-teacher
+icon: GraduationCap
+maturity: stable
+hidden: false
+domain: education
+category: education
+risk_class: education
+yarvelle:
+  risk_tier: T1
+  domain: education
+  data_scopes:
+    read:
+      - education.forms
+      - education.calendar
+      - education.assignments
+      - education.reading_log
+      - household.calendar
+      - health.immunizations
+    write:
+      - education.forms
+      - education.reading_log
+      - education.notes
+      - household.calendar
+  audiences:
+    - guardian
+    - adult
+    - teen_13_17
+  egress: []
+  actions:
+    - draft_school_form
+    - draft_school_email
+  forbidden:
+    - diagnose_learning_disability
+    - rank_child
+    - complete_graded_work
+    - contact_minor
+    - discipline_advice
+    - submit_form_automatically
+  evals: evals/golden.jsonl
+  review:
+    domain_reviewer: required
+    last_review: 2026-10-18

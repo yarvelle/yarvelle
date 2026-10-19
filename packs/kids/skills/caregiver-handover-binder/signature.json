@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "caregiver-handover-binder",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "c727bc5f023083de8e18a89bcf86c599133bb500e8150a8818edbbdbca840519",
+    "references/guidelines.md": "29b0dd7e0e8f64e079dadf040b3cd4e37c1b2f8ff53c86fe9afe0de1fca66d6c",
+    "SKILL.md": "dcf4f5be5f4e8b4d95eba870da156b365984c23d7e566cd5ffec919975e70a9b"
+  },
+  "signature": "20266fbec7cd96139ed3de64d4115ace8547b841abd05694c292be10923125c228c7ffa26523f12938cde46a8a5e15c673e4213138266497074e712ecf96320c"
+}

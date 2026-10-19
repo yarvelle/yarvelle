@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "policy-explainer",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "11490d6bc8bfd0fa24b75dcd2ef1e87478152b85a1b80ca1fff52a3c2fffa00d",
+    "references/guidelines.md": "c7cf1dfb5d2130060b2f4e5a42093f7d1c10d8f5082d487ff0390c195590203b",
+    "SKILL.md": "2dd9be16b23dfd90de83186b3bfd9deb2b3eca0baa7336c86409581bca1ea258"
+  },
+  "signature": "f3c59dc6a6cebacc86a43cd2a1f3640e38cd87b188cb4c5b6928f8c9fb5408ae9480767a6ceeb8d52ecfbe59cd2543c3b2ab3dd9c5d72a8df173ea9caeb60b02"
+}

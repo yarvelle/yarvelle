@@ -1,0 +1,20 @@
+product_name: "Yarvelle"
+env_prefix: "YARVELLE_"
+home_dir_name: ".yarvelle"
+db_filename: "yarvelle.db"
+oauth_scheme: "yarvelle"
+cookie_prefix: "yarvelle_"
+default_agent: "household-steward"
+
+packs:
+  enabled:
+    - health
+    - finance
+    - kids
+
+server:
+  host: "127.0.0.1"
+  port: 8000
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"

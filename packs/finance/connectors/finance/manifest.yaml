@@ -1,0 +1,81 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: financial-statement-connector
+version: 0.1.0
+name: Read-Only Financial Account & Statement Connector
+description: Read-only financial account aggregation, transaction history, and statement metadata with zero fund movement capabilities.
+categories:
+  - finance
+  - banking
+  - statements
+entrypoint: connectors.finance.connector:ReadOnlyFinancialConnector
+data_flows:
+  allowed_hosts:
+    - api.institution.com
+    - openbanking.institution.com
+    - localhost
+  allowed_schemes:
+    - https
+    - http
+  allowed_ports:
+    - 443
+    - 8443
+    - 8000
+  egress_direction: egress_only
+  pii_types_transferred:
+    - financial_account_metadata
+    - transaction_history
+auth:
+  type: oauth2
+  pkce: true
+  client_source: byo
+  token_rotation: true
+  rotating_refresh: true
+  scopes:
+    - finance.accounts
+    - finance.transactions
+    - finance.statements
+  scope_details:
+    - scope: finance.accounts
+      description: Read-only access to account balances and masked account identifiers
+    - scope: finance.transactions
+      description: Read-only access to posted and pending transaction history
+    - scope: finance.statements
+      description: Read-only access to periodic statement documents and metadata
+data_scopes:
+  read:
+    - finance.statements
+    - finance.transactions
+    - finance.accounts
+  write: []
+tools:
+  - name: finance_get_account_summary
+    description: Retrieves read-only account balances and masked identifiers for connected financial accounts.
+    risk_class: read_only
+  - name: finance_list_transactions
+    description: Retrieves read-only transaction history filtered by date range or category.
+    risk_class: read_only
+  - name: finance_get_statement_metadata
+    description: Retrieves available statement periods and document metadata without fund access.
+    risk_class: read_only
+trust:
+  publisher: Spectrayan
+  verified: true
+  sandbox_level: strict
+  trust_level: untrusted
+policy:
+  rate_limit_rpm: 60
+  timeout_seconds: 30.0
+  retry_max_attempts: 3
+terms:
+  license: Apache-2.0
+  ai_use_allowed: true

@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "household-budget",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "57c6f774169f8c008a08549150379c4994e471f7a58c7982045f0086578319dc",
+    "references/guidelines.md": "0c20bd3d5fd12035d208e4a38d3f6d035efa15e0fefc665501ee9312db06ce93",
+    "SKILL.md": "af708f1e6e4111df57b8cf5140c169a10526970ee73ca98a4f43a939a84b87a1"
+  },
+  "signature": "6eb1bee1444aa31a6a2807a2bb35e51518d23280dc52cf150d119253d958c0cd3aa5a4b4d6ccc85111642bde7739cabd0f1645a41f15d8232429b262411a3d02"
+}

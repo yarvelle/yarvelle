@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "assignment-tracker",
+  "version": "0.1.0",
+  "signer": "yarvelle-official",
+  "public_key": "7667fb6a2c1df530a44f690e5b8326e5a65a2307be2b35b20a106fe0adad4988",
+  "files": {
+    "evals/golden.jsonl": "fe5f08a96ebcf8705062749e013f1f29e49466e05d10490d34a7e3201c2feb66",
+    "references/guidelines.md": "824542e1306e943379261c4e309de48a76ad9652448fc6ede22ef1bf85c8303a",
+    "SKILL.md": "350cc61a48fa47ef1e2f767476123b9c38510729bdb5a06374cd971afd571cf1"
+  },
+  "signature": "fd53b484c4de6f78962136a58ddeff48419b2cde1e713e2fe9f594aaa28e77e37d444356c0154d02b504ae3476aec45d4fe6282bca288446f524ed28029fff06"
+}

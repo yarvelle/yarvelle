@@ -1,0 +1,73 @@
+# Yarvelle — Healthcare AI Agent Marketplace & Runtime
+# Copyright 2026 Spectrayan (https://spectrayan.com)
+#
+# Licensed under the PolyForm Noncommercial License 1.0.0 and the
+# Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+# Personal and household local use only. Commercial use, hosted service
+# offering, rebranding, white-labeling, and redistribution of modified
+# forks are prohibited without a written commercial license from Spectrayan.
+#
+# Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+
+id: finance-organizer
+title: Finance Organizer
+version: 0.1.0
+license: PolyForm-Noncommercial-1.0.0 + Yarvelle Additional Terms
+care_stages:
+  - daily_living
+target_audience:
+  - adult
+  - guardian
+tags:
+  - finance
+  - bills
+  - receipts
+  - budget
+  - medical-costs
+  - insurance
+  - subscriptions
+icon: Landmark
+maturity: stable
+hidden: false
+domain: finance
+category: finance
+risk_class: admin
+yarvelle:
+  risk_tier: T1
+  domain: finance
+  data_scopes:
+    read:
+      - finance.bills
+      - finance.receipts
+      - finance.budget
+      - finance.policies
+      - finance.subscriptions
+      - health.eob
+      - health.visits
+    write:
+      - finance.bills
+      - finance.receipts
+      - finance.budget
+      - finance.subscriptions
+      - finance.notes
+  audiences:
+    - adult
+    - guardian
+  egress: []
+  actions:
+    - draft_subscription_cancellation
+    - link_medical_bill_to_visit
+  forbidden:
+    - move_money
+    - transfer_funds
+    - bill_pay
+    - initiate_payment
+    - trade_securities
+    - invest_advice
+    - tax_advice
+    - credit_decision
+    - legal_advice
+  evals: evals/golden.jsonl
+  review:
+    domain_reviewer: required
+    last_review: 2026-10-18
