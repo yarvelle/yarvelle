@@ -1,0 +1,20 @@
+# Yarvelle Compatibility Matrix
+# Defines supported pairings of Yarvelle app, yarvelle-core, carefold-health, and packs.
+
+matrix:
+  - app: "0.1.0"
+    core: "0.1.0"
+    health_pack: "0.5.0b1"
+    finance_pack: "0.1.0"
+    education_pack: "0.1.0"
+    household_pack: "0.1.0"
+    pack_api: 1
+    python: ">=3.12"
+    node: ">=20.0.0"
+    status: "active"
+    notes: "Yarvelle monorepo release with 4-pack mesh: health, finance, education, household"
+
+rules:
+  supported_pack_apis: [1]
+  minimum_python: "3.12.0"
+  minimum_node: "20.0.0"

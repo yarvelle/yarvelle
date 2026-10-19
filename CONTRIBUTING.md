@@ -30,16 +30,12 @@ All contributors and maintainers are expected to adhere to the [Yarvelle Code of
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
-   pip install -e /path/to/yarvelle-core
-   pip install -e /path/to/carefold/packs/health
-   pip install -e .
-   pip install -e packs/finance
-   pip install -e packs/kids
+   pip install -e backend/
    ```
 
 3. **Run tests**:
    ```bash
-   pytest tests/ packs/finance/tests/ packs/kids/tests/ -v
+   pytest backend/tests/ -v
    ```
 
 ---

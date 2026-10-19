@@ -70,7 +70,7 @@ The Software includes health and clinical visit preparation capabilities. **It i
 ### 5.2 Finance & Non-Advisory Disclaimer
 The Software includes household financial organization, budgeting, and bill tracking capabilities. **It is not financial advice, investment advice, tax advice, credit counseling, or legal advice.** The Software cannot move money, execute transactions, access bank accounts with write permissions, or provide fiduciary financial guidance. Always consult a certified financial planner, CPA, or licensed professional for financial and tax decisions.
 
-### 5.3 Education & Kids Academic Integrity Disclaimer
+### 5.3 Education Academic Integrity Disclaimer
 The Software includes study aids, activity scheduling, and school form assistance. **It is an educational aid and does not replace professional educators or diagnostic specialists.** The Software enforces academic integrity: it will not complete graded homework, write school essays, or rank/score children.
 
 ---

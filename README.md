@@ -17,7 +17,7 @@
 [![Python: 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![Architecture: Modular Multi-Pack](https://img.shields.io/badge/architecture-modular_multi--pack-purple.svg)](https://spectrayan.com)
 
-**Yarvelle** is a privacy-preserving, local-first personal and family AI assistant application and multi-pack composition runtime. Built by Spectrayan, Yarvelle enables households to seamlessly organize health visits, manage family budgeting and bills, and coordinate kids' education and household routines while preserving strict cryptographic and data-scope isolation.
+**Yarvelle** is a privacy-preserving, local-first personal and family AI assistant application and multi-pack composition runtime. Built by Spectrayan, Yarvelle enables households to seamlessly organize health visits, manage family budgeting and bills, and coordinate education and household routines while preserving strict cryptographic and data-scope isolation.
 
 ---
 
@@ -25,8 +25,9 @@
 
 - **Multi-Pack Composition**: Dynamically loads domain packs via Pack API v1:
   - **Health Pack** (`carefold-health`): Clinical visit preparation, formulary search, and health record organization.
-  - **Finance Pack** (`yarvelle-pack-finance`): Household budgeting, bill tracking, and read-only statement organization.
-  - **Kids Pack** (`yarvelle-pack-kids`): School assignments, reading logs, activity tracking, and household chores.
+  - **Finance Pack** (`yarvelle_finance`): Household budgeting, bill tracking, and read-only statement organization.
+  - **Education Pack** (`yarvelle_education`): School assignments, reading logs, and developmental milestones.
+  - **Household Pack** (`yarvelle_household`): Household chores, meal planning, activities, family governance, and cross-domain links.
 - **Household & Cross-Domain Layer**:
   - Unified chronological timeline with domain-scoped filtering.
   - Dual-scope cross-domain entity linking.
@@ -53,12 +54,8 @@ cd yarvelle
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies and domain packs
-pip install -e /path/to/yarvelle-core
-pip install -e /path/to/carefold/packs/health
-pip install -e .
-pip install -e packs/finance
-pip install -e packs/kids
+# Install backend and dependencies
+pip install -e backend/
 ```
 
 ### Running the Application

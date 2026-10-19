@@ -1,0 +1,19 @@
+{
+  "name": "@carefold/health-ui",
+  "version": "0.5.0-beta.1",
+  "description": "Carefold Health Pack UI modules and slot contributions",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "main": "./index.tsx",
+  "module": "./index.tsx",
+  "types": "./index.tsx",
+  "exports": {
+    ".": {
+      "import": "./index.tsx",
+      "types": "./index.tsx"
+    }
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0",
+    "react-dom": ">=19.0.0"
+  }
+}

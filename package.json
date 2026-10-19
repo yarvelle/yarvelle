@@ -1,0 +1,26 @@
+{
+  "name": "yarvelle-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Yarvelle: Privacy-preserving local-first personal and family AI assistant",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "scripts": {
+    "check:licenses": "node scripts/licenses.mjs --check",
+    "fix:licenses": "node scripts/licenses.mjs",
+    "dev:backend": "PYTHONPATH=backend/src backend/.venv/bin/python3 -m uvicorn yarvelle.main:app --host 127.0.0.1 --port 8000 --reload",
+    "dev:web": "pnpm --filter @yarvelle/web dev",
+    "build": "pnpm -r --if-present run build",
+    "test": "pnpm -r --if-present run test",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "lint": "pnpm -r --if-present run lint"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

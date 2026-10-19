@@ -36,7 +36,7 @@ To help us triage and remediate the issue rapidly, please provide:
 ### In-Scope Vulnerabilities
 - **Tool Sandbox Escapes**: Path traversal attacks (`../`), symlink escapes, or arbitrary file system reads outside designated directories.
 - **Cross-Scope Data Leakage**: Failures in `ScopedSession` or `ScopeContext` allowing unauthorized access across domains (e.g., reading financial data without `finance.*` scope).
-- **Domain Safety Bypasses**: Bypasses of `FinanceSafetyPolicy` (e.g., executing money transfers, providing unauthorized investment advice) or `KidsSafetyPolicy` (e.g., ranking children, diagnosing disabilities, bypassing COPPA local egress).
+- **Domain Safety Bypasses**: Bypasses of `FinanceSafetyPolicy` (e.g., executing money transfers, providing unauthorized investment advice), `EducationSafetyPolicy` (e.g., ranking children, diagnosing disabilities, bypassing COPPA local egress), or `HouseholdSafetyPolicy` (e.g., covert monitoring).
 - **Cryptographic Failures**: Flaws in Argon2id KEK derivation, per-profile DEKs, or HKDF-SHA256 scope key derivations.
 
 ### Out of Scope

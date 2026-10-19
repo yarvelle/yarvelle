@@ -10,7 +10,8 @@ packs:
   enabled:
     - health
     - finance
-    - kids
+    - education
+    - household
 
 server:
   host: "127.0.0.1"

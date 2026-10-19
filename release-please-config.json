@@ -1,0 +1,25 @@
+{
+  "packages": {
+    "backend": {
+      "component": "yarvelle",
+      "release-type": "python",
+      "package-name": "yarvelle",
+      "changelog-path": "CHANGELOG.md",
+      "tag-separator": "-v",
+      "include-component-in-tag": true
+    },
+    "frontend": {
+      "component": "web",
+      "release-type": "node",
+      "package-name": "@yarvelle/web",
+      "changelog-path": "CHANGELOG.md",
+      "tag-separator": "-v",
+      "include-component-in-tag": true
+    }
+  },
+  "plugins": [
+    {
+      "type": "sentence-case"
+    }
+  ]
+}
