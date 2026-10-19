@@ -32,21 +32,23 @@ DEFAULT_DOMAINS = ["health", "finance", "education", "household"]
 
 
 def extract_caller_scopes(user: Any, header_scopes: Optional[str] = None) -> Set[str]:
-    """Resolves caller domain scopes, preventing zero-grant escalation (Bug 6 fix)."""
+    """Resolves caller domain scopes, preventing zero-grant escalation and header injection."""
     if user is not None:
         if getattr(user, "role", "") == "admin":
+            if header_scopes:
+                requested_admin = {s.strip().lower() for s in header_scopes.split(",") if s.strip()}
+                if requested_admin:
+                    return requested_admin
             return {"*"}
         raw_scopes = getattr(user, "domain_scopes", None)
         if raw_scopes is not None:
             scopes: Set[str] = {str(s).strip().lower() for s in raw_scopes if str(s).strip()}
             if header_scopes:
-                for s in header_scopes.split(","):
-                    s_clean = s.strip().lower()
-                    if s_clean:
-                        scopes.add(s_clean)
+                requested_header_scopes = {s.strip().lower() for s in header_scopes.split(",") if s.strip()}
+                if "*" in scopes:
+                    return requested_header_scopes if requested_header_scopes else scopes
+                return scopes.intersection(requested_header_scopes)
             return scopes
-        if header_scopes:
-            return {s.strip().lower() for s in header_scopes.split(",") if s.strip()}
         return set()
 
     if header_scopes:
@@ -160,7 +162,7 @@ class TimelineService:
 
         # 4. Optional Health Appointments (if carefold_health installed)
         try:
-            from carefold_health.clinical.models import Appointment  # type: ignore
+            from carefold_health.models import Appointment  # type: ignore
             appt_stmt = select(Appointment)
             if target_profile_ids is not None:
                 appt_stmt = appt_stmt.where(Appointment.profile_id.in_(target_profile_ids))

@@ -25,8 +25,10 @@ from yarvelle_core.engine.safety_policy import (
 
 ACADEMIC_DISHONESTY_PATTERNS = (
     r"\bwrite\s+(?:.*)?essay\b",
+    r"\bwrite\s+.*(?:essay|paper|assignment)\b",
     r"\bdo\s+my\s+homework\b",
     r"\bsolve\s+my\s+test\b",
+    r"\bsolve\s+.*(?:test|exam|quiz|homework|problem)\b",
     r"\bcomplete\s+my\s+assignment\b",
     r"\bwrite\s+the\s+answer\s+for\s+my\s+graded\b",
     r"\bfinish\s+my\s+homework\s+for\s+me\b",
@@ -37,7 +39,10 @@ CHILD_RANKING_PATTERNS = (
     r"\bpercentile\s+rank\b",
     r"\biq\s+score\b",
     r"\brank\s+my\s+child\b",
-    r"\bis\s+my\s+kid\s+smarter\s+than\b",
+    r"\brank\s+(?:my\s+)?(?:\w+\s+)?(?:kids|children|sons|daughters|students)\b",
+    r"\bis\s+my\s+(?:kid|child|son|daughter)\s+smarter\s+than\b",
+    r"\bpeer[s]?\s+percentile\b",
+    r"\bsmarter\s+than\s+.*peers?\b",
     r"\bcompare\s+to\s+other\s+.*graders\b",
     r"\bchild\s+percentile\b",
     r"\bbelow\s+average\s+intelligence\b",
@@ -46,6 +51,8 @@ CHILD_RANKING_PATTERNS = (
 
 LEARNING_DISABILITY_DIAGNOSTIC_PATTERNS = (
     r"\bdiagnose\s+adhd\b",
+    r"\bdiagnose\s+.*(?:dyslexia|adhd|autism|add)\b",
+    r"\bdiagnose\s+my\s+(?:daughter|son|child|kid)\b",
     r"\bdoes\s+.*have\s+dyslexia\b",
     r"\bautism\s+diagnosis\b",
     r"\bdiagnose\s+my\s+child\b",
@@ -61,6 +68,8 @@ COVERT_MONITORING_PATTERNS = (
     r"\blisten\s+in\s+on\s+my\s+teen\b",
     r"\btrack\s+without\s+them\s+knowing\b",
     r"\bsecretly\s+spy\b",
+    r"\b(?:track|spy\s+on|monitor)\s+.*(?:secretly|covertly)\b",
+    r"\b(?:secretly|covertly)\s+.*(?:track|spy|monitor)\b",
 )
 
 AUTO_SUBMIT_FORM_PATTERNS = (
@@ -76,6 +85,7 @@ KIDS_FORBIDDEN_INTENTS: Set[str] = {
     "forbidden_intent:contact_minor",
     "forbidden_intent:covert_monitoring",
     "forbidden_intent:auto_submit_school_form",
+    "coppa_local_egress_required",
 }
 
 SAFE_KIDS_REFUSAL_TEMPLATE = """### Child Safety & Academic Integrity Notice
@@ -102,12 +112,24 @@ class KidsSafetyPolicy:
 
         # 0. COPPA Under-13 Cloud Egress Enforcement (YV-EDU-7)
         if ctx is not None:
-            metadata = getattr(ctx, "metadata", {}) or {}
+            metadata = getattr(ctx, "metadata", None)
+            if metadata is None:
+                metadata = {}
+                try:
+                    ctx.metadata = metadata
+                except Exception:
+                    pass
             age_band = metadata.get("age_band") or getattr(ctx, "age_band", None)
-            cloud_opt_in = metadata.get("cloud_guardian_opt_in", False)
-            if age_band in ("child_u13", "child") and not cloud_opt_in:
-                # Local execution is enforced
-                pass
+            if age_band in ("child_u13", "child"):
+                metadata["local_execution_enforced"] = True
+                if metadata.get("is_cloud_model", False) and not metadata.get("cloud_guardian_opt_in", False):
+                    return SafetyVerdict(
+                        refused=True,
+                        reason="coppa_local_egress_required",
+                        safe_response="COPPA under-13 requires local-first processing unless guardian opt-in is granted.",
+                        category="coppa_local_egress",
+                        is_hard=True,
+                    )
 
         # 1. Academic Dishonesty (YV-EDU-2)
         for pat in ACADEMIC_DISHONESTY_PATTERNS:
@@ -192,6 +214,8 @@ class KidsSafetyPolicy:
             "forbidden_intent:complete_graded_work",
             "forbidden_intent:covert_monitoring",
             "forbidden_intent:contact_minor",
+            "forbidden_intent:diagnose_learning_disability",
+            "coppa_local_egress_required",
         }
 
     def get_forbidden_intents(self) -> Set[str]:

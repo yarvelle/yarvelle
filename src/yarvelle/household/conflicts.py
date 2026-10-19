@@ -94,7 +94,7 @@ class ConflictDetector:
         # Fetch appointments (health or household)
         appts = []
         try:
-            from carefold_health.clinical.models import Appointment  # type: ignore
+            from carefold_health.models import Appointment  # type: ignore
             appt_stmt = select(Appointment).where(
                 Appointment.profile_id.in_(profile_ids),
                 Appointment.start_time >= now - timedelta(hours=6),
@@ -127,7 +127,7 @@ class ConflictDetector:
         # Fetch school forms
         forms = []
         try:
-            from carefold_health.clinical.models import SchoolForm  # type: ignore
+            from carefold_health.models import SchoolForm  # type: ignore
             form_stmt = select(SchoolForm).where(
                 SchoolForm.profile_id.in_(profile_ids),
                 SchoolForm.status.in_(["draft", "pending_signature", "active"]),

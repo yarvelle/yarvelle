@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from datetime import datetime as dt, timedelta, timezone
 from pathlib import Path
+from types import SimpleNamespace
 import uuid
 import pytest
 from sqlalchemy import select
@@ -24,6 +25,7 @@ from sqlalchemy.orm import sessionmaker
 from yarvelle_core.auth.ports import UserProfile
 from yarvelle_core.db.base import Base
 from yarvelle_core.db.models import Attachment, AuditEventRecord, Note, Profile, Reminder
+from carefold_health.models import Appointment, SchoolForm
 from yarvelle.household.conflicts import ConflictDetector
 from yarvelle.household.cross_links import CrossLinksService
 from yarvelle.household.governance import FamilyGovernanceService
@@ -131,6 +133,62 @@ class TestUnifiedTimeline:
         scopes = extract_caller_scopes(user)
         assert "*" not in scopes
 
+    def test_extract_caller_scopes_header_injection_prevention(self):
+        """Regression test: untrusted X-Domain-Scopes cannot escalate beyond authenticated grants."""
+        # 1. Non-empty domain_scopes cannot be expanded by header
+        user_finance = SimpleNamespace(
+            id="u-fin",
+            role="member",
+            domain_scopes=["finance:read"],
+        )
+        # Attempted injection of health:read and universal *
+        scopes = extract_caller_scopes(user_finance, header_scopes="health:read,finance:read,*")
+        assert "health:read" not in scopes
+        assert "*" not in scopes
+        assert scopes == {"finance:read"}
+
+        # 2. Zero-grant user cannot escalate via header
+        user_zero = SimpleNamespace(
+            id="u-zero2",
+            role="member",
+            domain_scopes=[],
+        )
+        scopes_zero = extract_caller_scopes(user_zero, header_scopes="health:read,finance:read,*")
+        assert scopes_zero == set()
+
+        # 3. Authorized scopes can be narrowed / filtered by header
+        user_multi = SimpleNamespace(
+            id="u-multi",
+            role="member",
+            domain_scopes=["health:read", "finance:read", "education:read"],
+        )
+        scopes_filtered = extract_caller_scopes(user_multi, header_scopes="health:read")
+        assert scopes_filtered == {"health:read"}
+
+    @pytest.mark.asyncio
+    async def test_timeline_appointment_rendering(self, async_db: AsyncSession):
+        """Verifies health Appointment fixture renders in unified household timeline."""
+        now = dt.now(timezone.utc)
+        hh = Household(id="hh-appt", name="Appt HH", domain_toggles={"health": True})
+        p = Profile(id="p-appt", name="Emma", created_at=now, updated_at=now)
+        m = HouseholdMember(id="m-appt", household_id=hh.id, profile_id=p.id, role="member", age_band="child_u13")
+        appt = Appointment(
+            id="appt-pediatric",
+            profile_id=p.id,
+            scope="health",
+            title="Annual Pediatric Wellness Exam",
+            start_time=now + timedelta(days=2),
+            end_time=now + timedelta(days=2, hours=1),
+            created_at=now,
+            updated_at=now,
+        )
+        async_db.add_all([hh, p, m, appt])
+        await async_db.commit()
+
+        svc = TimelineService(async_db)
+        res = await svc.fetch_timeline(caller_scopes={"health:read"}, household_id="hh-appt")
+        assert any(it.id == "appt-pediatric" and it.item_type == "appointment" for it in res.items)
+
 
 class TestCrossDomainLinks:
     """Typed Cross-Domain Links (YV-X-2)."""
@@ -190,6 +248,59 @@ class TestConflictDetector:
         detector = ConflictDetector(async_db)
         res = await detector.detect_conflicts(household_id="hh-c1", window="7d")
         assert len([c for c in res.conflicts if c.type == "bill_due_cluster"]) == 0
+
+    @pytest.mark.asyncio
+    async def test_sports_event_expired_physical_triggers_conflict(self, async_db: AsyncSession):
+        """Verifies an expired sports physical triggers a ConflictDetector warning on athletic events."""
+        now = dt.now(timezone.utc)
+        hh = Household(id="hh-sports", name="Sports HH")
+        child = Profile(id="p-athlete", name="Athlete Kid", created_at=now, updated_at=now)
+        m = HouseholdMember(id="m-ath", household_id=hh.id, profile_id=child.id, role="dependent", age_band="child_u13")
+        expired_form = SchoolForm(
+            id="form-phys-exp",
+            profile_id=child.id,
+            scope="health",
+            title="Pre-Participation Sports Physical",
+            form_type="physical",
+            expires_at=now - timedelta(days=15),
+            status="active",
+            created_at=now,
+            updated_at=now,
+        )
+        soccer_practice = Appointment(
+            id="appt-soccer",
+            profile_id=child.id,
+            scope="health",
+            title="Youth Soccer Practice & Conditioning",
+            start_time=now + timedelta(days=1),
+            end_time=now + timedelta(days=1, hours=2),
+            created_at=now,
+            updated_at=now,
+        )
+        grocery_trip = Appointment(
+            id="appt-grocery",
+            profile_id=child.id,
+            scope="health",
+            title="Family Grocery Shopping",
+            start_time=now + timedelta(days=3),
+            end_time=now + timedelta(days=3, hours=1),
+            created_at=now,
+            updated_at=now,
+        )
+        async_db.add_all([hh, child, m, expired_form, soccer_practice, grocery_trip])
+        await async_db.commit()
+
+        detector = ConflictDetector(async_db)
+        res = await detector.detect_conflicts(household_id=hh.id, window="7d")
+
+        # Only soccer practice should conflict, grocery shopping ignored
+        physical_conflicts = [c for c in res.conflicts if c.type == "physical_expired"]
+        assert len(physical_conflicts) == 1
+        conflict = physical_conflicts[0]
+        assert "appt-soccer" in conflict.event_ids
+        assert "form-phys-exp" in conflict.event_ids
+        assert "appt-grocery" not in conflict.event_ids
+        assert conflict.severity == "warning"
 
 
 class TestScopedShreddingAndErasure:

@@ -32,6 +32,9 @@ FORBIDDEN_MONEY_PATTERNS = (
     r"\btransfer\s+money\b",
     r"\bwire\s+funds\b",
     r"\bach\s+transfer\b",
+    r"\bach\b",
+    r"\bdebit\b",
+    r"\bexecute\s+.*(?:transaction|debit|payment)\b",
     r"\bsend\s+money\b",
     r"\binitiate\s+payment\b",
     r"\bmove\s+money\b",
@@ -47,12 +50,17 @@ INVESTMENT_ADVICE_PATTERNS = (
     r"\bwhich\s+stock\b",
     r"\bcryptocurrency\s+trading\b",
     r"\bportfolio\s+allocation\b",
+    r"\ballocate\s+.*portfolio\b",
     r"\bbest\s+stock\b",
     r"\bmarket\s+timing\b",
     r"\binvestment\s+recommendation\b",
     r"\bpick\s+(?:top\s+\d+|stocks)\b",
     r"\bstocks?\s+to\s+buy\b",
     r"\bbuy\s+stock\b",
+    r"\bbuy\s+.*stocks?\b",
+    r"\bshould\s+i\s+buy\b",
+    r"\b401k\b",
+    r"\bira\b",
     r"\binvest\s+in\b",
     r"\bcrypto_invest\b",
 )
@@ -174,6 +182,7 @@ class FinanceSafetyPolicy:
             "forbidden_intent:execute_financial_transaction",
             "forbidden_intent:investment_advice",
             "forbidden_intent:move_money",
+            "forbidden_intent:credit_decision",
         }
 
     def get_forbidden_intents(self) -> Set[str]:
