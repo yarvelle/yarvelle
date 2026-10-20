@@ -25,12 +25,16 @@ class CustomBuildHook(BuildHookInterface):
             return
         root = Path(self.root).parent  # top-level repo root
         force_include = build_data.setdefault("force_include", {})
+        target_prefix = (
+            "src/yarvelle/_content"
+            if self.target_name == "sdist"
+            else "yarvelle/_content"
+        )
 
         agents_dir = root / "agents"
         skills_dir = root / "skills"
 
         if agents_dir.is_dir():
-            force_include[str(agents_dir)] = "yarvelle/_content/agents"
+            force_include[str(agents_dir)] = f"{target_prefix}/agents"
         if skills_dir.is_dir():
-            force_include[str(skills_dir)] = "yarvelle/_content/skills"
-
+            force_include[str(skills_dir)] = f"{target_prefix}/skills"
