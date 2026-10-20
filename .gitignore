@@ -16,6 +16,7 @@ eggs/
 .eggs/
 lib/
 lib64/
+!frontend/src/lib/
 parts/
 sdist/
 var/
@@ -231,4 +232,4 @@ yarn-error.log*
 pnpm-debug.log*
 frontend/coverage/
 logs/
-
+*.tsbuildinfo

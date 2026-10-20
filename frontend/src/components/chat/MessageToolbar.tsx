@@ -1,0 +1,162 @@
+/*
+ * Yarvelle — Personal & Family AI Assistant Application
+ * Copyright 2026 Spectrayan (https://spectrayan.com)
+ *
+ * Licensed under the PolyForm Noncommercial License 1.0.0 and the
+ * Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+ * Personal and household local use only. Commercial use, hosted service
+ * offering, rebranding, white-labeling, and redistribution of modified
+ * forks are prohibited without a written commercial license from Spectrayan.
+ *
+ * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+ */
+
+'use client';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Copy, Check, RotateCcw } from 'lucide-react';
+
+export interface MessageToolbarProps {
+  role: 'user' | 'assistant';
+  content: string;
+  messageId: string;
+  onRerun?: (prompt: string) => void;
+  onRegenerate?: (messageId: string) => void;
+  disabled?: boolean;
+  isStreaming?: boolean;
+}
+
+export function MessageToolbar({
+  role,
+  content,
+  messageId,
+  onRerun,
+  onRegenerate,
+  disabled = false,
+  isStreaming = false,
+}: MessageToolbarProps) {
+  const [copied, setCopied] = useState(false);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+    };
+  }, []);
+
+  const handleCopy = async () => {
+    try {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.clipboard &&
+        navigator.clipboard.writeText
+      ) {
+        await navigator.clipboard.writeText(content);
+        setCopied(true);
+      } else if (typeof document !== 'undefined') {
+        const textArea = document.createElement('textarea');
+        textArea.value = content;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setCopied(true);
+      }
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => {
+        setCopied(false);
+      }, 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const isUser = role === 'user';
+
+  const containerClasses = isUser
+    ? 'flex items-center gap-0.5 bg-[var(--cf-surface-2)] rounded-lg p-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 transition-opacity'
+    : 'flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100 transition-opacity';
+
+  const buttonClasses = isUser
+    ? 'min-w-[44px] min-h-[44px] p-2.5 rounded hover:bg-[var(--cf-surface-3)] text-[var(--cf-fg-muted)] hover:text-[var(--cf-fg)] transition flex items-center justify-center cursor-pointer'
+    : 'min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-[var(--cf-surface-2)] text-[var(--cf-fg-muted)] hover:text-[var(--cf-fg)] transition flex items-center justify-center cursor-pointer';
+
+  const rerunButtonClasses = isUser
+    ? 'min-w-[44px] min-h-[44px] p-2.5 rounded hover:bg-[var(--cf-surface-3)] text-[var(--cf-fg-muted)] hover:text-[var(--cf-fg)] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer'
+    : 'min-w-[44px] min-h-[44px] p-2.5 rounded-lg hover:bg-[var(--cf-surface-2)] text-[var(--cf-fg-muted)] hover:text-[var(--cf-fg)] transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer';
+
+  return (
+    <div
+      data-testid="message-action-toolbar"
+      role="toolbar"
+      aria-label="Message actions"
+      className={containerClasses}
+    >
+      <span data-testid="message-hover-toolbar" className="sr-only">
+        Message Toolbar
+      </span>
+
+      {/* Copy Button */}
+      <button
+        type="button"
+        data-testid="message-copy-btn"
+        aria-label={copied ? 'Copied' : 'Copy message'}
+        title={copied ? 'Copied!' : 'Copy message'}
+        onClick={handleCopy}
+        className={buttonClasses}
+      >
+        <span data-testid="copy-message-btn" className="sr-only">
+          Copy
+        </span>
+        {copied ? (
+          <Check
+            data-testid="message-copy-success"
+            className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400"
+          />
+        ) : (
+          <Copy data-testid="copy-icon" className="w-3.5 h-3.5" />
+        )}
+      </button>
+
+      {/* User Rerun Button */}
+      {isUser && onRerun && (
+        <button
+          type="button"
+          data-testid="message-rerun-btn"
+          data-action="rerun"
+          aria-label="Rerun prompt"
+          title="Rerun prompt"
+          disabled={disabled}
+          onClick={() => onRerun(content)}
+          className={rerunButtonClasses}
+        >
+          <span data-testid="rerun-message-btn" className="sr-only">
+            Rerun prompt
+          </span>
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+      )}
+
+      {/* Assistant Regenerate Button */}
+      {!isUser && onRegenerate && (
+        <button
+          type="button"
+          data-testid="message-rerun-btn"
+          data-action="regenerate"
+          aria-label="Regenerate response"
+          title="Regenerate response"
+          disabled={disabled || isStreaming}
+          onClick={() => onRegenerate(messageId)}
+          className={rerunButtonClasses}
+        >
+          <span data-testid="rerun-message-btn" className="sr-only">
+            Regenerate response
+          </span>
+          <RotateCcw className="w-3.5 h-3.5" />
+        </button>
+      )}
+    </div>
+  );
+}

@@ -74,8 +74,8 @@ export default function NotesPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Notes & Dossiers</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold font-fraunces tracking-tight text-[var(--cf-text-primary)]">Notes & Dossiers</h1>
+        <p className="text-xs text-[var(--cf-text-muted)] mt-1">
           Encrypted local notes, consultation prep records, and family reference binders.
         </p>
       </div>
@@ -87,18 +87,18 @@ export default function NotesPage() {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search notes & dossiers..."
           data-testid="notes-search-input"
-          className="flex-1 px-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+          className="flex-1 px-4 py-2 text-sm rounded-lg border border-[var(--cf-border)] bg-[var(--cf-surface)] text-[var(--cf-text-primary)] placeholder:text-[var(--cf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--cf-focus)]"
         />
       </div>
 
-      <form onSubmit={handleCreate} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-sm space-y-3">
+      <form onSubmit={handleCreate} className="rounded-2xl border border-[var(--cf-border)] bg-[var(--cf-surface)] p-4 shadow-xs space-y-3">
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="New note title..."
           data-testid="new-note-title"
-          className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+          className="w-full px-3 py-2 text-sm rounded-lg border border-[var(--cf-border)] bg-[var(--cf-surface-2)] text-[var(--cf-text-primary)] placeholder:text-[var(--cf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--cf-focus)]"
         />
         <div className="flex gap-2">
           <input
@@ -107,12 +107,12 @@ export default function NotesPage() {
             onChange={(e) => setBody(e.target.value)}
             placeholder="Note content (stored under Argon2id envelope encryption)..."
             data-testid="new-note-body"
-            className="flex-1 px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+            className="flex-1 px-3 py-2 text-sm rounded-lg border border-[var(--cf-border)] bg-[var(--cf-surface-2)] text-[var(--cf-text-primary)] placeholder:text-[var(--cf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--cf-focus)]"
           />
           <button
             type="submit"
             data-testid="save-note-button"
-            className="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-700 text-white hover:bg-emerald-800 transition"
+            className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--cf-primary)] text-white hover:opacity-90 transition cursor-pointer"
           >
             Save Note
           </button>
@@ -123,15 +123,15 @@ export default function NotesPage() {
         {filteredNotes.map((note) => (
           <div
             key={note.id}
-            className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-sm space-y-2"
+            className="rounded-2xl border border-[var(--cf-border)] bg-[var(--cf-surface)] p-5 shadow-xs space-y-2"
           >
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-semibold text-slate-900 dark:text-slate-100">{note.title}</h3>
-              <span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <h3 className="font-semibold text-xs text-[var(--cf-text-primary)]">{note.title}</h3>
+              <span className="text-xs px-2 py-0.5 rounded bg-[var(--cf-surface-2)] text-[var(--cf-text-muted)] font-mono">
                 {note.scope}
               </span>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-400">{note.body}</p>
+            <p className="text-xs text-[var(--cf-text-secondary)]">{note.body}</p>
           </div>
         ))}
       </div>

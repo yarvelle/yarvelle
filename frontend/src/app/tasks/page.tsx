@@ -54,8 +54,8 @@ export default function TasksPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Tasks & Chores</h1>
-        <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+        <h1 className="text-2xl font-bold font-fraunces tracking-tight text-[var(--cf-text-primary)]">Tasks & Chores</h1>
+        <p className="text-xs text-[var(--cf-text-muted)] mt-1">
           Household maintenance checklists, chore rotations, and academic assignment trackers.
         </p>
       </div>
@@ -67,13 +67,13 @@ export default function TasksPage() {
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="Add a household task, chore, or assignment..."
           data-testid="new-task-input"
-          className="flex-1 min-w-[220px] px-4 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+          className="flex-1 min-w-[220px] px-4 py-2 text-sm rounded-lg border border-[var(--cf-border)] bg-[var(--cf-surface)] text-[var(--cf-text-primary)] placeholder:text-[var(--cf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--cf-focus)]"
         />
         <select
           value={newPack}
           onChange={(e) => setNewPack(e.target.value as TaskEntry['pack'])}
           aria-label="Task domain"
-          className="px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"
+          className="px-3 py-2 text-sm rounded-lg border border-[var(--cf-border)] bg-[var(--cf-surface)] text-[var(--cf-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--cf-focus)]"
         >
           <option value="Household">Household</option>
           <option value="Education">Education</option>
@@ -83,14 +83,14 @@ export default function TasksPage() {
         <button
           type="submit"
           data-testid="add-task-button"
-          className="px-4 py-2 text-sm font-medium rounded-lg bg-emerald-700 text-white hover:bg-emerald-800 transition"
+          className="px-4 py-2 text-sm font-medium rounded-lg bg-[var(--cf-primary)] text-white hover:opacity-90 transition cursor-pointer"
         >
           Add Task
         </button>
       </form>
 
-      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
-        <ul className="divide-y divide-slate-100 dark:divide-slate-800 text-sm" data-testid="task-list">
+      <div className="rounded-2xl border border-[var(--cf-border)] bg-[var(--cf-surface)] p-6 shadow-xs">
+        <ul className="divide-y divide-[var(--cf-border)] text-sm" data-testid="task-list">
           {tasks.map((task) => (
             <li key={task.id} className="py-3 flex items-center justify-between gap-3">
               <label className="flex items-center gap-3 cursor-pointer">
@@ -98,19 +98,19 @@ export default function TasksPage() {
                   type="checkbox"
                   checked={task.done}
                   onChange={() => toggleTask(task.id)}
-                  className="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600"
+                  className="h-4 w-4 rounded border-[var(--cf-border-strong)] text-[var(--cf-primary)] focus:ring-[var(--cf-focus)]"
                 />
                 <span
                   className={
                     task.done
-                      ? 'line-through text-slate-400 dark:text-slate-500'
-                      : 'text-slate-700 dark:text-slate-200'
+                      ? 'line-through text-[var(--cf-text-muted)]'
+                      : 'text-[var(--cf-text-primary)]'
                   }
                 >
                   {task.title}
                 </span>
               </label>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[var(--cf-primary-soft)] text-[var(--cf-primary-soft-fg)] font-medium">
                 {task.pack}
               </span>
             </li>

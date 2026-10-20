@@ -1,0 +1,164 @@
+/*
+ * Yarvelle — Personal & Family AI Assistant Application
+ * Copyright 2026 Spectrayan (https://spectrayan.com)
+ *
+ * Licensed under the PolyForm Noncommercial License 1.0.0 and the
+ * Yarvelle Additional Terms (see LICENSE and ADDITIONAL-TERMS.md).
+ * Personal and household local use only. Commercial use, hosted service
+ * offering, rebranding, white-labeling, and redistribution of modified
+ * forks are prohibited without a written commercial license from Spectrayan.
+ *
+ * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
+ */
+
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+/**
+ * Sanitizes an agent description by removing stray markdown section headers
+ * (e.g. "ROLE & EMPATHY:", "ROLE:") if present as a fallback artifact.
+ */
+export function sanitizeAgentDescription(desc?: string | null): string {
+  if (!desc) return '';
+  return desc
+    .replace(
+      /^(?:#+\s*|\*+\s*)?(?:ROLE(?:\s*&|\s+AND)?\s*EMPATHY|ROLE|CLINICAL SCOPE(?:\s*&|\s+FOCUS)?|MISSION|OVERVIEW):?\s*/i,
+      ''
+    )
+    .trim();
+}
+
+/**
+ * Formats a hierarchical category string (e.g. "clinical.cardiology" or "navigation.insurance")
+ * into a clean, human-readable specialty label (e.g. "Cardiology", "Insurance").
+ * Strips any redundant domain prefix matching the agent domain.
+ */
+export function formatCategoryLabel(category?: string | null, domain?: string | null): string {
+  if (!category) return '';
+  let sub = category.trim();
+
+  // Strip leading domain prefix if present (e.g. "clinical.cardiology" -> "cardiology")
+  if (domain && sub.toLowerCase().startsWith(`${domain.toLowerCase()}.`)) {
+    sub = sub.slice(domain.length + 1);
+  } else if (sub.includes('.')) {
+    // Or take the leaf segment after the last dot
+    const parts = sub.split('.');
+    sub = parts[parts.length - 1];
+  }
+
+  // If subcategory is empty or identical to domain, omit redundant badge
+  if (!sub || (domain && sub.toLowerCase() === domain.toLowerCase())) {
+    return '';
+  }
+
+  // Replace underscores/hyphens with spaces and capitalize each word
+  return sub
+    .replace(/[_-]+/g, ' ')
+    .trim()
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+/**
+ * Maps risk classes to human-readable plain language labels.
+ * (e.g. "wellness" -> "Wellness", "clinical_assist" -> "Clinical assist", "admin" -> "Admin", "education" -> "Education")
+ */
+export function formatRiskClass(riskClass?: string | null): string {
+  if (!riskClass) return '';
+  const trimmed = riskClass.trim();
+  if (!trimmed) return '';
+  const normalized = trimmed.toLowerCase();
+  switch (normalized) {
+    case 'wellness':
+      return 'Wellness';
+    case 'admin':
+      return 'Admin';
+    case 'education':
+      return 'Education';
+    case 'clinical_assist':
+    case 'clinical-assist':
+      return 'Clinical assist';
+    default:
+      return trimmed
+        .replace(/[_-]+/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+  }
+}
+
+export const formatRiskLabel = formatRiskClass;
+export const formatRiskClassLabel = formatRiskClass;
+
+/**
+ * Maps care stage identifiers to human-readable plain language labels.
+ */
+export function formatCareStage(stage?: string | null): string {
+  if (!stage) return '';
+  const trimmed = stage.trim();
+  if (!trimmed) return '';
+  switch (trimmed.toLowerCase()) {
+    case 'pre_visit':
+    case 'pre-visit':
+      return 'Before visit';
+    case 'during_visit':
+    case 'during-visit':
+      return 'During visit';
+    case 'post_visit':
+    case 'post-visit':
+      return 'After visit';
+    case 'follow_up':
+    case 'follow-up':
+      return 'Follow-up';
+    case 'daily_living':
+    case 'daily-living':
+      return 'Daily living';
+    default:
+      return trimmed
+        .replace(/[_-]+/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(' ');
+  }
+}
+
+/**
+ * Plain-language descriptions for known safety forbidden intent tokens.
+ */
+export const FORBIDDEN_INTENT_DESCRIPTIONS: Record<string, string> = {
+  diagnose: 'Diagnose a condition or provide medical diagnoses.',
+  prescribe: 'Prescribe, recommend, or alter medications or treatments.',
+  dose: 'Tell you how much medication to take or how to adjust dosages.',
+  replace_emergency_care: 'Replace emergency services or professional care in an acute situation.',
+  instruct_stop_medication: 'Tell you to stop, skip, or alter medications.',
+  order_lab_tests: 'Order clinical laboratory tests or diagnostic procedures.',
+  interpret_imaging: 'Interpret diagnostic imaging or pathology reports.',
+  emergency_diversion: 'Divert away from immediate emergency services.',
+  medical_prohibited: 'Engage in unauthorized clinical practices.',
+  policy_prohibited: 'Perform prohibited policy actions.'
+};
+
+/**
+ * Formats a forbidden-intent token into a human-readable plain-language sentence.
+ */
+export function formatForbiddenIntent(token?: string | null): string {
+  if (!token) return '';
+  const key = token.trim().toLowerCase();
+  if (!key) return '';
+  if (FORBIDDEN_INTENT_DESCRIPTIONS[key]) {
+    return FORBIDDEN_INTENT_DESCRIPTIONS[key];
+  }
+  const words = key.replace(/[_-]+/g, ' ').trim();
+  if (!words) return '';
+  const capitalized = `${words.charAt(0).toUpperCase()}${words.slice(1)}`;
+  return capitalized.endsWith('.') ? capitalized : `${capitalized}.`;
+}
+
+export const describeForbiddenIntent = formatForbiddenIntent;
