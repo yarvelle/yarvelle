@@ -15,8 +15,7 @@ default:
 # Start development environments for backend and frontend
 dev:
     @echo "Starting Yarvelle development environment..."
-    pnpm install
-    PYTHONPATH=backend/src backend/.venv/bin/python -m uvicorn yarvelle.main:app --host 127.0.0.1 --port 8000 --reload
+    bash scripts/start.sh
 
 # Run full test suite across backend and frontend
 test:

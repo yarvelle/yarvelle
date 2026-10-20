@@ -13,9 +13,24 @@
 
 import type { NextConfig } from 'next';
 
+const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  agentRules: false,
   transpilePackages: ['@yarvelle/ui', '@carefold/health-ui'],
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+      {
+        source: '/healthz',
+        destination: `${backendUrl}/healthz`,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

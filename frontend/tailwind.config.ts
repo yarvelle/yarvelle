@@ -14,15 +14,56 @@
 import type { Config } from 'tailwindcss';
 import { yarvellePreset } from '@yarvelle/ui/tokens';
 
+const presetTheme = yarvellePreset.theme ?? {};
+
 const config: Config = {
-  presets: [yarvellePreset],
   darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: [
+    'bg-surface',
+    'bg-surface-2',
+    'bg-surface-3',
+    'bg-canvas',
+    'text-fg',
+    'text-fg-muted',
+    'text-fg-subtle',
+    'border-border',
+    'border-border-strong',
+    'bg-primary',
+    'text-primary-fg',
+    'bg-primary-soft',
+    'text-primary-soft-fg',
+    'bg-info-bg',
+    'text-info-fg',
+    'border-info-border',
+    'bg-warn-bg',
+    'text-warn-fg',
+    'border-warn-border',
+    'bg-danger-bg',
+    'text-danger-fg',
+    'border-danger-border',
+    'bg-success-bg',
+    'text-success-fg',
+    'border-success-border',
+    'shadow-1',
+    'shadow-2',
+    'rounded-sm',
+    'rounded-md',
+    'rounded-lg',
+    'rounded-xl',
+    'p-6',
+    'pt-0',
+    'px-2.5',
+    'py-0.5',
+    'text-start',
+    'space-y-1.5',
+  ],
   theme: {
     extend: {
       colors: {
+        ...(presetTheme.colors ?? {}),
         cradle: {
           emerald: {
             DEFAULT: '#047857',
@@ -55,6 +96,18 @@ const config: Config = {
             900: '#78350f',
           },
         },
+      },
+      borderRadius: {
+        ...(presetTheme.borderRadius ?? {}),
+      },
+      boxShadow: {
+        ...(presetTheme.boxShadow ?? {}),
+      },
+      fontFamily: {
+        ...(presetTheme.fontFamily ?? {}),
+      },
+      zIndex: {
+        ...(presetTheme.zIndex ?? {}),
       },
     },
   },
