@@ -14,8 +14,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@carefold/health-ui": "file:../../carefold/frontend/src/health-ui",
-    "@yarvelle/ui": "file:../../yarvelle-core/frontend",
+    "@spectrayan/carefold": "^0.5.0-beta.2",
+    "@yarvelle/ui": "^0.1.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.475.0",
     "next": "16.3.8",

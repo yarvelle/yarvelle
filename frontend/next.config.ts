@@ -18,7 +18,7 @@ const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:8000';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   agentRules: false,
-  transpilePackages: ['@yarvelle/ui', '@carefold/health-ui'],
+  transpilePackages: ['@yarvelle/ui', '@spectrayan/carefold'],
   async rewrites() {
     return [
       {

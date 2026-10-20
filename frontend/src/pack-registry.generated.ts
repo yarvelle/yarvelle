@@ -11,7 +11,7 @@
  * Required Notice: Copyright 2026 Spectrayan (https://spectrayan.com)
  */
 
-import { healthPackUi } from '@carefold/health-ui';
+import { healthPackUi } from '@spectrayan/carefold';
 import { financePackUi } from '@/finance';
 import { educationPackUi } from '@/education';
 import { householdPackUi } from '@/household';

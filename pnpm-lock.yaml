@@ -17,12 +17,12 @@ importers:
 
   frontend:
     dependencies:
-      '@carefold/health-ui':
-        specifier: file:../../carefold/frontend/src/health-ui
-        version: file:../carefold/frontend/src/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@spectrayan/carefold':
+        specifier: ^0.5.0-beta.2
+        version: 0.5.0-beta.2(@yarvelle/ui@0.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@yarvelle/ui':
-        specifier: file:../../yarvelle-core/frontend
-        version: file:../yarvelle-core/frontend(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -174,12 +174,6 @@ packages:
   '@babel/types@7.29.8':
     resolution: {integrity: sha512-Vj1jF3cPfxg7OAfoI7QnVKLoILlm2JF9pnVHrX8qx7AHMiYWT+NDAA7jChlNgRS4WTLc/fD1lXLmPixluj+3Gg==}
     engines: {node: '>=6.9.0'}
-
-  '@carefold/health-ui@file:../carefold/frontend/src/health-ui':
-    resolution: {directory: ../carefold/frontend/src/health-ui, type: directory}
-    peerDependencies:
-      react: '>=19.0.0'
-      react-dom: '>=19.0.0'
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
@@ -733,6 +727,13 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@spectrayan/carefold@0.5.0-beta.2':
+    resolution: {integrity: sha512-R0RrFfryPRCy4CYI+yb+OQxIQNPq38h8mLdDTMbqu/MCGrOmLQsgcqSbEn6lFZZ++RirGAQI+DOAFny0zHR44Q==}
+    peerDependencies:
+      '@yarvelle/ui': '>=0.1.0'
+      react: '>=19.0.0'
+      react-dom: '>=19.0.0'
+
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -838,8 +839,8 @@ packages:
   '@vitest/utils@4.1.12':
     resolution: {integrity: sha512-Q3awXrwOfEV+qc3WmO5ONyE0yO7Q1gQ9/oyHxGLZ/pl7N3NO/ZztqQwKLuwMkV+CA1JYSIeO3gkHnRDIo4AVaA==}
 
-  '@yarvelle/ui@file:../yarvelle-core/frontend':
-    resolution: {directory: ../yarvelle-core/frontend, type: directory}
+  '@yarvelle/ui@0.1.1':
+    resolution: {integrity: sha512-5Y6Pp/Ek+S9XsgLg4j5INR6N/IVLvHxe1ACwCnrFoWJsEXbt6F+FpnLXIsR6BOramis2z6yxhsqkegf0fMLo9Q==}
     hasBin: true
     peerDependencies:
       react: '>=18.2.0 || >=19.0.0'
@@ -1645,11 +1646,6 @@ snapshots:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
 
-  '@carefold/health-ui@file:../carefold/frontend/src/health-ui(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
-    dependencies:
-      react: 19.3.0
-      react-dom: 19.3.0(react@19.3.0)
-
   '@emnapi/runtime@1.11.3':
     dependencies:
       tslib: 2.8.1
@@ -1977,6 +1973,12 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.64.10':
     optional: true
 
+  '@spectrayan/carefold@0.5.0-beta.2(@yarvelle/ui@0.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      '@yarvelle/ui': 0.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
+
   '@standard-schema/spec@1.1.0': {}
 
   '@swc/helpers@0.5.23':
@@ -2116,7 +2118,7 @@ snapshots:
       convert-source-map: 2.0.0
       tinyrainbow: 3.2.0
 
-  '@yarvelle/ui@file:../yarvelle-core/frontend(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+  '@yarvelle/ui@0.1.1(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
     dependencies:
       clsx: 2.1.1
       lucide-react: 0.475.0(react@19.3.0)
