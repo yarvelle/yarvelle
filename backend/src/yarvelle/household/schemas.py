@@ -35,6 +35,9 @@ class HouseholdResponse(BaseModel):
 
 class CreateHouseholdRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
+    profile_id: Optional[str] = Field(
+        default=None, description="Profile the creator joins as admin (defaults to the caller's own profile)"
+    )
     domain_toggles: Optional[Dict[str, bool]] = None
     two_guardian_rules: Optional[Dict[str, str]] = None
 
