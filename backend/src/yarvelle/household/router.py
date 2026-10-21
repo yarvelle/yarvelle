@@ -22,8 +22,9 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from yarvelle_core.api.deps import get_current_user
+from yarvelle_core.api.deps import get_current_user, get_user_profile_access, resolve_owner_user_id
 from yarvelle_core.auth.ports import UserProfile
+from yarvelle_core.db.models import Profile
 from yarvelle_core.db.session import get_db
 from yarvelle.household.conflicts import ConflictDetector
 from yarvelle.household.cross_links import CrossLinksService
@@ -54,12 +55,77 @@ router = APIRouter(tags=["household"])
 # Household Management (YV-FAM-1)
 # -----------------------------------------------------------------------------
 
+async def _membership(db: AsyncSession, household_id: str, user: UserProfile) -> Optional[HouseholdMember]:
+    stmt = select(HouseholdMember).where(
+        HouseholdMember.household_id == household_id,
+        HouseholdMember.user_id == user.id,
+    )
+    return (await db.execute(stmt)).scalars().first()
+
+
+def _is_single_user_mode(user: UserProfile) -> bool:
+    """Local single-user mode (auth disabled / default steward) owns everything."""
+    return resolve_owner_user_id(user) is None
+
+
+async def _load_household(db: AsyncSession, household_id: str) -> Household:
+    hh = (await db.execute(select(Household).where(Household.id == household_id))).scalar_one_or_none()
+    if not hh:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Household '{household_id}' not found")
+    return hh
+
+
+async def require_household_member(db: AsyncSession, household_id: str, user: UserProfile) -> Household:
+    """Returns the household if user is a member; non-members get 404 (no enumeration)."""
+    hh = await _load_household(db, household_id)
+    if _is_single_user_mode(user):
+        return hh
+    if await _membership(db, household_id, user) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Household '{household_id}' not found")
+    return hh
+
+
+async def require_household_admin(db: AsyncSession, household_id: str, user: UserProfile) -> Household:
+    """Returns the household if user is one of its admins (YV-FAM-3)."""
+    hh = await require_household_member(db, household_id, user)
+    if _is_single_user_mode(user):
+        return hh
+    member = await _membership(db, household_id, user)
+    if member is None or member.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only household admins can change members, roles or settings",
+        )
+    return hh
+
+
+async def _require_profile_manage(db: AsyncSession, profile_id: str, user: UserProfile) -> Profile:
+    profile = await db.get(Profile, profile_id)
+    if profile is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Profile '{profile_id}' not found")
+    if not _is_single_user_mode(user) and await get_user_profile_access(profile, user, db) != "manage":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only add profiles you manage to a household",
+        )
+    return profile
+
+
+async def _caller_primary_profile_id(db: AsyncSession, user: UserProfile) -> Optional[str]:
+    stmt = select(Profile.id).where(Profile.user_id == user.id).order_by(Profile.is_primary.desc())
+    return (await db.execute(stmt)).scalars().first()
+
+
 @router.get("", response_model=List[HouseholdResponse])
 async def list_households(
     user: UserProfile = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> List[Household]:
     stmt = select(Household)
+    if not _is_single_user_mode(user):
+        stmt = stmt.join(HouseholdMember, HouseholdMember.household_id == Household.id).where(
+            HouseholdMember.user_id == user.id
+        ).distinct()
     return list((await db.execute(stmt)).scalars().all())
 
 
@@ -69,6 +135,17 @@ async def create_household(
     user: UserProfile = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Household:
+    admin_profile_id = request.profile_id
+    if admin_profile_id:
+        await _require_profile_manage(db, admin_profile_id, user)
+    elif not _is_single_user_mode(user):
+        admin_profile_id = await _caller_primary_profile_id(db, user)
+        if admin_profile_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Create your profile before creating a household",
+            )
+
     new_hh = Household(
         id=str(uuid.uuid4()),
         name=request.name.strip(),
@@ -81,56 +158,21 @@ async def create_household(
         },
     )
     db.add(new_hh)
+    if admin_profile_id:
+        await db.flush()
+        db.add(
+            HouseholdMember(
+                id=str(uuid.uuid4()),
+                household_id=new_hh.id,
+                profile_id=admin_profile_id,
+                user_id=None if _is_single_user_mode(user) else user.id,
+                role="admin",
+                relationship="self",
+            )
+        )
     await db.commit()
     await db.refresh(new_hh)
     return new_hh
-
-
-@router.get("/{household_id}", response_model=HouseholdResponse)
-async def get_household(
-    household_id: str,
-    user: UserProfile = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-) -> Household:
-    stmt = select(Household).where(Household.id == household_id)
-    hh = (await db.execute(stmt)).scalar_one_or_none()
-    if not hh:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Household '{household_id}' not found")
-    return hh
-
-
-@router.get("/{household_id}/toggles", response_model=Dict[str, bool])
-async def get_household_toggles(
-    household_id: str,
-    user: UserProfile = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-) -> Dict[str, bool]:
-    stmt = select(Household).where(Household.id == household_id)
-    hh = (await db.execute(stmt)).scalar_one_or_none()
-    if not hh:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Household '{household_id}' not found")
-    return hh.domain_toggles
-
-
-@router.patch("/{household_id}/toggles", response_model=Dict[str, bool])
-async def update_household_toggles(
-    household_id: str,
-    request: UpdateTogglesRequest,
-    user: UserProfile = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-) -> Dict[str, bool]:
-    stmt = select(Household).where(Household.id == household_id)
-    hh = (await db.execute(stmt)).scalar_one_or_none()
-    if not hh:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Household '{household_id}' not found")
-    current = dict(hh.domain_toggles)
-    for k, v in request.model_dump(exclude_unset=True).items():
-        if v is not None:
-            current[k] = v
-    hh.domain_toggles = current
-    await db.commit()
-    await db.refresh(hh)
-    return hh.domain_toggles
 
 
 # -----------------------------------------------------------------------------
@@ -138,33 +180,42 @@ async def update_household_toggles(
 # -----------------------------------------------------------------------------
 
 @router.get("/members", response_model=List[HouseholdMemberResponse])
-@router.get("/{household_id}/members", response_model=List[HouseholdMemberResponse])
-async def list_household_members(
-    household_id: Optional[str] = None,
+async def list_my_household_members(
     user: UserProfile = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> List[HouseholdMember]:
+    """Members of the households the caller belongs to (never other households)."""
     stmt = select(HouseholdMember)
-    if household_id:
-        stmt = stmt.where(HouseholdMember.household_id == household_id)
+    if not _is_single_user_mode(user):
+        mine = select(HouseholdMember.household_id).where(HouseholdMember.user_id == user.id)
+        stmt = stmt.where(HouseholdMember.household_id.in_(mine))
     return list((await db.execute(stmt)).scalars().all())
 
 
-@router.post("/members", response_model=HouseholdMemberResponse, status_code=status.HTTP_201_CREATED)
+@router.get("/{household_id}/members", response_model=List[HouseholdMemberResponse])
+async def list_household_members(
+    household_id: str,
+    user: UserProfile = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> List[HouseholdMember]:
+    await require_household_member(db, household_id, user)
+    stmt = select(HouseholdMember).where(HouseholdMember.household_id == household_id)
+    return list((await db.execute(stmt)).scalars().all())
+
+
 @router.post("/{household_id}/members", response_model=HouseholdMemberResponse, status_code=status.HTTP_201_CREATED)
 async def add_household_member(
+    household_id: str,
     request: AddMemberRequest,
-    household_id: Optional[str] = None,
     user: UserProfile = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> HouseholdMember:
-    target_hh_id = household_id or getattr(request, "household_id", None)
-    if not target_hh_id:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="household_id is required")
+    await require_household_admin(db, household_id, user)
+    await _require_profile_manage(db, request.profile_id, user)
 
     member = HouseholdMember(
         id=str(uuid.uuid4()),
-        household_id=target_hh_id,
+        household_id=household_id,
         profile_id=request.profile_id,
         user_id=request.user_id,
         role=request.role,
@@ -337,3 +388,45 @@ async def shred_profile(
         return await service.crypto_shred_profile(profile_id=profile_id)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+
+# -----------------------------------------------------------------------------
+# Single-household routes. Declared last: "/{household_id}" would otherwise
+# shadow the static paths above (/members, /timeline, /links, /conflicts, ...).
+# -----------------------------------------------------------------------------
+
+@router.get("/{household_id}", response_model=HouseholdResponse)
+async def get_household(
+    household_id: str,
+    user: UserProfile = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Household:
+    return await require_household_member(db, household_id, user)
+
+
+@router.get("/{household_id}/toggles", response_model=Dict[str, bool])
+async def get_household_toggles(
+    household_id: str,
+    user: UserProfile = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Dict[str, bool]:
+    hh = await require_household_member(db, household_id, user)
+    return hh.domain_toggles
+
+
+@router.patch("/{household_id}/toggles", response_model=Dict[str, bool])
+async def update_household_toggles(
+    household_id: str,
+    request: UpdateTogglesRequest,
+    user: UserProfile = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Dict[str, bool]:
+    hh = await require_household_admin(db, household_id, user)
+    current = dict(hh.domain_toggles)
+    for k, v in request.model_dump(exclude_unset=True).items():
+        if v is not None:
+            current[k] = v
+    hh.domain_toggles = current
+    await db.commit()
+    await db.refresh(hh)
+    return hh.domain_toggles
