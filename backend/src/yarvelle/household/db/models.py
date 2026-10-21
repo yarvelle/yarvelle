@@ -140,7 +140,7 @@ class HouseholdMember(Base):
         String(32),
         default="adult",
         nullable=False,
-        doc="Age band classification: child_u13, teen_13_17, adult, older_adult (YV-FAM-2)",
+        doc="Canonical age band (yarvelle_core.schemas.age_band): child_under_13, teen_13_17, adult, older_adult (YV-FAM-2)",
     )
     is_private: Mapped[bool] = mapped_column(
         Boolean,

@@ -15,7 +15,14 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Any, Dict, List, Literal, Optional
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from yarvelle_core.schemas.age_band import AgeBand, canonical_age_band
+
+
+def _canonicalize_age_band(value: Optional[str]) -> Optional[str]:
+    """Accepts legacy spellings (child_u13, child, teen) and stores the canonical key."""
+    return None if value is None else canonical_age_band(value)
 
 
 # -----------------------------------------------------------------------------
@@ -35,6 +42,9 @@ class HouseholdResponse(BaseModel):
 
 class CreateHouseholdRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
+    profile_id: Optional[str] = Field(
+        default=None, description="Profile the creator joins as admin (defaults to the caller's own profile)"
+    )
     domain_toggles: Optional[Dict[str, bool]] = None
     two_guardian_rules: Optional[Dict[str, str]] = None
 
@@ -53,7 +63,7 @@ class HouseholdMemberResponse(BaseModel):
     user_id: Optional[str] = None
     role: Literal["admin", "member", "guest", "dependent"]
     relationship: str
-    age_band: Literal["child_u13", "teen_13_17", "adult", "older_adult"]
+    age_band: AgeBand
     is_private: bool
     delegated_scopes: List[str]
     created_at: datetime
@@ -61,23 +71,29 @@ class HouseholdMemberResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+    _canonical_age_band = field_validator("age_band", mode="before")(_canonicalize_age_band)
+
 
 class AddMemberRequest(BaseModel):
     profile_id: str
     user_id: Optional[str] = None
     role: Literal["admin", "member", "guest", "dependent"] = "member"
     relationship: str = "self"
-    age_band: Literal["child_u13", "teen_13_17", "adult", "older_adult"] = "adult"
+    age_band: AgeBand = "adult"
     is_private: bool = False
     delegated_scopes: List[str] = Field(default_factory=list)
+
+    _canonical_age_band = field_validator("age_band", mode="before")(_canonicalize_age_band)
 
 
 class UpdateMemberRequest(BaseModel):
     role: Optional[Literal["admin", "member", "guest", "dependent"]] = None
     relationship: Optional[str] = None
-    age_band: Optional[Literal["child_u13", "teen_13_17", "adult", "older_adult"]] = None
+    age_band: Optional[AgeBand] = None
     is_private: Optional[bool] = None
     delegated_scopes: Optional[List[str]] = None
+
+    _canonical_age_band = field_validator("age_band", mode="before")(_canonicalize_age_band)
 
 
 # -----------------------------------------------------------------------------
