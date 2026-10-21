@@ -16,6 +16,7 @@ from __future__ import annotations
 import re
 from typing import Any, Optional, Sequence, Set
 
+from yarvelle_core.schemas.age_band import is_child_under_13
 from yarvelle_core.engine.safety_policy import (
     EmergencyDirective,
     SafetyContext,
@@ -106,8 +107,13 @@ class EducationSafetyPolicy:
                     ctx.metadata = metadata
                 except Exception:
                     pass
-            age_band = metadata.get("age_band") or getattr(ctx, "age_band", None)
-            if age_band in ("child_u13", "child"):
+            extra = getattr(ctx, "extra", None) or {}
+            age_band = (
+                metadata.get("age_band")
+                or getattr(ctx, "age_band", None)
+                or (extra.get("age_band") if isinstance(extra, dict) else None)
+            )
+            if is_child_under_13(age_band):
                 metadata["local_execution_enforced"] = True
                 if metadata.get("is_cloud_model", False) and not metadata.get("cloud_guardian_opt_in", False):
                     return SafetyVerdict(

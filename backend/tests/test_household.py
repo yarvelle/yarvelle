@@ -52,7 +52,7 @@ class TestFamilyGovernance:
 
     def test_age_band_classification(self):
         svc = FamilyGovernanceService
-        assert svc.classify_age_band("2015-05-12", reference_year=2026) == "child_u13"
+        assert svc.classify_age_band("2015-05-12", reference_year=2026) == "child_under_13"
         assert svc.classify_age_band("2010-08-20", reference_year=2026) == "teen_13_17"
         assert svc.classify_age_band("1990-01-01", reference_year=2026) == "adult"
         assert svc.classify_age_band("1955-11-30", reference_year=2026) == "older_adult"
