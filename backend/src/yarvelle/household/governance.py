@@ -17,9 +17,10 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from yarvelle.household.db.models import Household
+from yarvelle_core.schemas.age_band import AGE_BANDS as CORE_AGE_BANDS, CHILD_UNDER_13
 
 
-AGE_BANDS = ("child_u13", "teen_13_17", "adult", "older_adult")
+AGE_BANDS = CORE_AGE_BANDS
 ROLES = ("admin", "member", "guest", "dependent")
 
 
@@ -38,7 +39,7 @@ class FamilyGovernanceService:
             birth_year = int(dob_str[:4])
             age = reference_year - birth_year
             if age < 13:
-                return "child_u13"
+                return CHILD_UNDER_13
             elif 13 <= age <= 17:
                 return "teen_13_17"
             elif age >= 65:
