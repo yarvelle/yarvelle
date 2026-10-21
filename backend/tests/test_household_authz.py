@@ -28,7 +28,7 @@ from yarvelle.main import build_app
 from yarvelle_core.api.deps import get_current_user
 from yarvelle_core.auth.ports import UserProfile
 from yarvelle_core.config import settings as core_settings
-from yarvelle_core.db.models import Profile, User
+from yarvelle_core.db.models import Profile, ProfileAccess, User
 
 
 def _user(user_id: str) -> UserProfile:
@@ -49,7 +49,7 @@ def ctx(monkeypatch) -> Iterator[Tuple[TestClient, dict]]:
 
     app.dependency_overrides[get_current_user] = _fake_user
     suffix = uuid.uuid4().hex[:8]
-    ids = {name: f"{name}-{suffix}" for name in ("alice", "bob", "dan")}
+    ids = {name: f"{name}-{suffix}" for name in ("alice", "bob", "dan", "vera")}
     profiles = {name: f"p-{name}-{suffix}" for name in ("alice", "bob", "dan")}
     with TestClient(app) as client:
         engine = create_engine(settings.database_url.replace("+aiosqlite", ""))
@@ -61,6 +61,17 @@ def ctx(monkeypatch) -> Iterator[Tuple[TestClient, dict]]:
             session.flush()
             session.add_all(
                 [Profile(id=pid, user_id=owner[name], name=name, is_primary=name != "dan") for name, pid in profiles.items()]
+            )
+            # vera holds a read-only grant on alice's profile.
+            session.add(
+                ProfileAccess(
+                    profile_id=profiles["alice"],
+                    user_id=ids["vera"],
+                    granted_by=ids["alice"],
+                    role="viewer",
+                    access_level="view",
+                    granted_at=datetime.now(timezone.utc),
+                )
             )
             session.commit()
         engine.dispose()
@@ -125,3 +136,67 @@ def test_static_household_paths_are_not_shadowed(ctx) -> None:
     response = client.get("/api/v1/household/members", headers=_h(data["users"]["alice"]))
     assert response.status_code == 200
     assert response.json() == []
+
+
+def test_cross_domain_views_and_data_operations_require_authorization(ctx) -> None:
+    client, data = ctx
+    alice, bob, dan, vera = (data["users"][k] for k in ("alice", "bob", "dan", "vera"))
+    p = data["profiles"]
+    hh_id = client.post("/api/v1/household", json={"name": "Alice home"}, headers=_h(alice)).json()["id"]
+    added = client.post(
+        f"/api/v1/household/{hh_id}/members",
+        json={"profile_id": p["dan"], "user_id": dan, "role": "member"},
+        headers=_h(alice),
+    )
+    assert added.status_code == 201, added.text
+    link_body = {
+        "source_domain": "health",
+        "source_entity_type": "appointment",
+        "source_entity_id": "a-1",
+        "target_domain": "finance",
+        "target_entity_type": "bill",
+        "target_entity_id": "b-1",
+        "link_type": "billed_by",
+        "profile_id": p["alice"],
+    }
+
+    # Timeline: outsiders cannot read another household or profile, and must name a target.
+    assert client.get(f"/api/v1/household/timeline?household_id={hh_id}", headers=_h(bob)).status_code == 404
+    assert client.get(f"/api/v1/household/timeline?profile_id={p['alice']}", headers=_h(bob)).status_code == 404
+    assert client.get("/api/v1/household/timeline", headers=_h(bob)).status_code == 400
+    assert client.get(f"/api/v1/household/timeline?household_id={hh_id}", headers=_h(dan)).status_code == 200
+    assert client.get(f"/api/v1/household/timeline?profile_id={p['alice']}", headers=_h(vera)).status_code == 200
+
+    # Links: write needs write access to the profile; listing and deleting are profile-bound.
+    assert client.post("/api/v1/household/links", json=link_body, headers=_h(bob)).status_code == 404
+    assert client.post("/api/v1/household/links", json=link_body, headers=_h(vera)).status_code == 403
+    created = client.post("/api/v1/household/links", json=link_body, headers=_h(alice))
+    assert created.status_code == 201, created.text
+    link_id = created.json()["id"]
+    assert client.get("/api/v1/household/links", headers=_h(bob)).status_code == 400
+    assert client.get(f"/api/v1/household/links?profile_id={p['alice']}", headers=_h(bob)).status_code == 404
+    assert client.get(f"/api/v1/household/links?profile_id={p['alice']}", headers=_h(vera)).status_code == 200
+    assert client.get(f"/api/v1/household/links?profile_id={p['alice']}", headers=_h(alice)).status_code == 200
+    assert client.delete(f"/api/v1/household/links/{link_id}", headers=_h(bob)).status_code == 404
+    assert client.delete(f"/api/v1/household/links/{link_id}", headers=_h(vera)).status_code == 403
+    assert client.delete(f"/api/v1/household/links/{link_id}", headers=_h(alice)).status_code == 204
+
+    # Conflicts: household members only.
+    assert client.get(f"/api/v1/household/conflicts?household_id={hh_id}", headers=_h(bob)).status_code == 404
+    assert client.get(f"/api/v1/household/conflicts?household_id={hh_id}", headers=_h(dan)).status_code == 200
+
+    # Export: household admin or profile manager only.
+    export_q = "include_files=false"
+    assert client.get(f"/api/v1/household/export?household_id={hh_id}&{export_q}", headers=_h(bob)).status_code == 404
+    assert client.get(f"/api/v1/household/export?household_id={hh_id}&{export_q}", headers=_h(dan)).status_code == 403
+    assert client.get(f"/api/v1/household/export?profile_id={p['alice']}&{export_q}", headers=_h(vera)).status_code == 403
+    assert client.get(f"/api/v1/household/export?{export_q}", headers=_h(bob)).status_code == 400
+    assert client.get(f"/api/v1/household/export?household_id={hh_id}&{export_q}", headers=_h(alice)).status_code == 200
+
+    # Purge and shred: only a full manager of the profile.
+    purge = {"profile_id": p["alice"], "domain": "finance"}
+    assert client.post("/api/v1/household/purge/domain", json=purge, headers=_h(bob)).status_code == 404
+    assert client.post("/api/v1/household/purge/domain", json=purge, headers=_h(vera)).status_code == 403
+    assert client.delete(f"/api/v1/household/shred/{p['alice']}", headers=_h(bob)).status_code == 404
+    assert client.delete(f"/api/v1/household/shred/{p['alice']}", headers=_h(vera)).status_code == 403
+    assert client.post("/api/v1/household/purge/domain", json=purge, headers=_h(alice)).status_code == 200
