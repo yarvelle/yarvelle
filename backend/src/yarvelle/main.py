@@ -26,6 +26,7 @@ import yaml
 from yarvelle import __version__
 from yarvelle.branding import PRODUCT_NAME
 from yarvelle.config import settings
+from yarvelle_core.api.http_security import build_cors_options, enforce_bind_safety
 from yarvelle_core.api.router import get_default_router_contributions, mount_router_contributions
 from yarvelle_core.constants.api import API_PREFIX, API_V1_PREFIX
 from yarvelle_core.constants.defaults import DEFAULT_HOST, DEFAULT_PORT
@@ -50,22 +51,17 @@ def load_config_file(config_path: Optional[Path] = None) -> dict:
     return {}
 
 
+INSECURE_BIND_OVERRIDE_ENV = "YARVELLE_ALLOW_UNAUTHENTICATED_NETWORK_BIND"
+
+
 def check_host_binding_security(host: str, auth_provider: Optional[str] = None) -> None:
-    """Warns if server is bound to a non-loopback host without authentication."""
-    clean_host = (host or DEFAULT_HOST).strip().lower()
-    clean_auth = (auth_provider or getattr(settings, "auth_provider", "local") or "local").strip().lower()
-    loopback_hosts = ("127.0.0.1", "localhost", "::1")
-    if clean_host not in loopback_hosts and clean_auth == "disabled":
-        logger.warning(
-            "security_warning_non_loopback_unauthenticated",
-            host=clean_host,
-            auth_provider=clean_auth,
-            message=(
-                "Yarvelle backend is bound to a non-loopback interface with authentication disabled! "
-                "Household data and administrative endpoints may be exposed on the local network. "
-                "Set YARVELLE_AUTH_PROVIDER=local or bind to 127.0.0.1."
-            ),
-        )
+    """Refuses to start when auth is disabled on a non-loopback bind (explicit override only)."""
+    enforce_bind_safety(
+        (host or DEFAULT_HOST).strip(),
+        auth_provider or getattr(settings, "auth_provider", "local"),
+        override_env=INSECURE_BIND_OVERRIDE_ENV,
+        product="Yarvelle",
+    )
 
 
 def build_app(
@@ -121,13 +117,7 @@ def build_app(
     )
 
     # Configure CORS
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    app.add_middleware(CORSMiddleware, **build_cors_options(settings.cors_origins))
 
     # Mount Master Composite Router
     master_router = APIRouter()
