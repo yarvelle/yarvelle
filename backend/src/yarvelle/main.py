@@ -26,7 +26,7 @@ import yaml
 from yarvelle import __version__
 from yarvelle.branding import PRODUCT_NAME
 from yarvelle.config import settings
-from yarvelle_core.api.router import get_default_router_contributions
+from yarvelle_core.api.router import get_default_router_contributions, mount_router_contributions
 from yarvelle_core.constants.api import API_PREFIX, API_V1_PREFIX
 from yarvelle_core.constants.defaults import DEFAULT_HOST, DEFAULT_PORT
 from yarvelle_core.db.session import close_db, init_db
@@ -132,42 +132,18 @@ def build_app(
     # Mount Master Composite Router
     master_router = APIRouter()
 
-    # Core contributions
-    for contrib in get_default_router_contributions():
-        kwargs: dict = {}
-        if contrib.prefix:
-            kwargs["prefix"] = contrib.prefix
-        if contrib.tags:
-            kwargs["tags"] = contrib.tags
-        if contrib.dependencies:
-            kwargs["dependencies"] = contrib.dependencies
-        if not contrib.include_in_schema:
-            kwargs["include_in_schema"] = False
-        master_router.include_router(contrib.router, **kwargs)
+    # Core contributions, then pack contributions. mount_router_contributions
+    # mounts every pack router behind core's auth + scope guard and refuses
+    # unguarded or absolute-prefix contributions, so failures here are fatal.
+    mount_router_contributions(master_router, get_default_router_contributions())
 
-    # Pack contributions (e.g. from carefold_health, finance, education, household)
-    try:
-        preview_registry = discover_and_load_packs(enabled_pack_ids=active_packs)
-        for contrib in preview_registry.router_contributions:
-            kwargs = {}
-            if contrib.prefix:
-                kwargs["prefix"] = contrib.prefix
-            if contrib.tags:
-                kwargs["tags"] = contrib.tags
-            if contrib.dependencies:
-                kwargs["dependencies"] = contrib.dependencies
-            if not contrib.include_in_schema:
-                kwargs["include_in_schema"] = False
-            master_router.include_router(contrib.router, **kwargs)
-    except Exception as e:
-        logger.debug("preview_router_registration_deferred", error=str(e))
+    pack_registry = discover_and_load_packs(enabled_pack_ids=active_packs)
+    mount_router_contributions(master_router, pack_registry.router_contributions)
 
-    # Household & Cross-Domain router (Step Y3)
-    try:
-        from yarvelle.household.router import router as household_router
-        master_router.include_router(household_router, prefix="/household", tags=["Household"])
-    except Exception as e:
-        logger.debug("household_router_deferred", error=str(e))
+    # Household & cross-domain router (Step Y3); endpoints enforce membership.
+    from yarvelle.household.router import router as household_router
+
+    master_router.include_router(household_router, prefix="/household", tags=["Household"])
 
     app.include_router(master_router, prefix=API_V1_PREFIX)
     app.include_router(master_router, prefix=API_PREFIX, include_in_schema=False)

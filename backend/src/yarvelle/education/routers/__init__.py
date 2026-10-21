@@ -27,28 +27,28 @@ def get_education_router_contributions() -> List[RouterContribution]:
     return [
         RouterContribution(
             assignments_router,
-            prefix="/api/v1/education/assignments",
+            prefix="/education/assignments",
             pack_id="education",
             scope="education.assignments",
             level="read",
         ),
         RouterContribution(
             milestones_router,
-            prefix="/api/v1/education/milestones",
+            prefix="/education/milestones",
             pack_id="education",
             scope="education.milestones",
             level="read",
         ),
         RouterContribution(
             reading_router,
-            prefix="/api/v1/education/reading",
+            prefix="/education/reading",
             pack_id="education",
             scope="education.reading",
             level="read",
         ),
         RouterContribution(
             forms_router,
-            prefix="/api/v1/education/forms",
+            prefix="/education/forms",
             pack_id="education",
             scope="education.forms",
             level="read",
