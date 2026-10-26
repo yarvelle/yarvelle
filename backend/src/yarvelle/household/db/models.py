@@ -265,50 +265,230 @@ class HouseholdChore(Base, ScopedMixin):
     """Household chore assignment, streak, and check-off."""
 
     __tablename__ = "household_chores"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = {
+        "extend_existing": True,
+        "comment": "Household chore assignments, recurrence frequencies, completion streaks, and timestamps.",
+    }
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    profile_id: Mapped[str] = mapped_column(String(36), ForeignKey("profiles.id", ondelete="CASCADE"), index=True, nullable=False)
-    title: Mapped[str] = mapped_column(String(255), nullable=False)
-    assigned_to: Mapped[str] = mapped_column(String(128), nullable=False, default="all")
-    frequency: Mapped[str] = mapped_column(String(32), nullable=False, default="daily")  # daily, weekly
-    streak: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    last_completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        doc="Unique chore UUID v4 identifier.",
+        comment="Unique chore UUID v4 identifier.",
+    )
+    profile_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+        doc="Owning profile UUID v4 identifier.",
+        comment="Owning profile UUID v4 identifier.",
+    )
+    title: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        doc="Chore title or task description.",
+        comment="Chore title or task description.",
+    )
+    assigned_to: Mapped[str] = mapped_column(
+        String(128),
+        nullable=False,
+        default="all",
+        doc="Assigned family member name or 'all'.",
+        comment="Assigned family member name or 'all'.",
+    )
+    frequency: Mapped[str] = mapped_column(
+        String(32),
+        nullable=False,
+        default="daily",
+        doc="Chore recurrence frequency: daily, weekly, monthly.",
+        comment="Chore recurrence frequency: daily, weekly, monthly.",
+    )
+    streak: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+        default=0,
+        doc="Consecutive completion streak count.",
+        comment="Consecutive completion streak count.",
+    )
+    last_completed_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        doc="Timestamp when the chore was most recently completed (UTC).",
+        comment="Timestamp when the chore was most recently completed (UTC).",
+    )
+    notes: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True,
+        doc="Optional chore instructions or notes.",
+        comment="Optional chore instructions or notes.",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+        doc="Creation timestamp (UTC).",
+        comment="Creation timestamp (UTC).",
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+        doc="Last modification timestamp (UTC).",
+        comment="Last modification timestamp (UTC).",
+    )
 
 
 class HouseholdMealPlan(Base, ScopedMixin):
     """Weekly family meal schedule, allergen guard, and grocery list."""
 
     __tablename__ = "household_meal_plans"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = {
+        "extend_existing": True,
+        "comment": "Weekly household meal schedules, grocery lists, and allergen constraints per profile.",
+    }
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    profile_id: Mapped[str] = mapped_column(String(36), ForeignKey("profiles.id", ondelete="CASCADE"), index=True, nullable=False)
-    week_identifier: Mapped[str] = mapped_column(String(16), nullable=False, index=True)  # e.g. "2026-W42"
-    meals_json: Mapped[str] = mapped_column(Text, nullable=False, default="{}")
-    groceries_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
-    allergens_json: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        doc="Unique meal plan UUID v4 identifier.",
+        comment="Unique meal plan UUID v4 identifier.",
+    )
+    profile_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+        doc="Owning profile UUID v4 identifier.",
+        comment="Owning profile UUID v4 identifier.",
+    )
+    week_identifier: Mapped[str] = mapped_column(
+        String(16),
+        nullable=False,
+        index=True,
+        doc="ISO week identifier formatted as YYYY-Www (e.g. '2026-W42').",
+        comment="ISO week identifier formatted as YYYY-Www (e.g. '2026-W42').",
+    )
+    meals_json: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+        default="{}",
+        doc="Serialized JSON schedule of planned meals by day of week.",
+        comment="Serialized JSON schedule of planned meals by day of week.",
+    )
+    groceries_json: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+        default="[]",
+        doc="Serialized JSON array of grocery list items.",
+        comment="Serialized JSON array of grocery list items.",
+    )
+    allergens_json: Mapped[str] = mapped_column(
+        Text,
+        nullable=False,
+        default="[]",
+        doc="Serialized JSON array of household dietary allergens to avoid.",
+        comment="Serialized JSON array of household dietary allergens to avoid.",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+        doc="Creation timestamp (UTC).",
+        comment="Creation timestamp (UTC).",
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+        doc="Last modification timestamp (UTC).",
+        comment="Last modification timestamp (UTC).",
+    )
 
 
 class HouseholdActivity(Base, ScopedMixin):
     """Extracurricular sports, clubs, lessons, and schedules."""
 
     __tablename__ = "household_activities"
-    __table_args__ = {"extend_existing": True}
+    __table_args__ = {
+        "extend_existing": True,
+        "comment": "Extracurricular sports, clubs, lessons, locations, and schedules per profile.",
+    }
 
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
-    profile_id: Mapped[str] = mapped_column(String(36), ForeignKey("profiles.id", ondelete="CASCADE"), index=True, nullable=False)
-    activity_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    category: Mapped[str] = mapped_column(String(64), nullable=False, default="sports")  # sports, music, arts, club
-    location: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    start_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    end_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    recurrence_rrule: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
-    coach_or_leader: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        doc="Unique household activity UUID v4 identifier.",
+        comment="Unique household activity UUID v4 identifier.",
+    )
+    profile_id: Mapped[str] = mapped_column(
+        String(36),
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        index=True,
+        nullable=False,
+        doc="Owning profile UUID v4 identifier.",
+        comment="Owning profile UUID v4 identifier.",
+    )
+    activity_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        doc="Name of the sport, club, lesson, or family activity.",
+        comment="Name of the sport, club, lesson, or family activity.",
+    )
+    category: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+        default="sports",
+        doc="Activity category: sports, music, arts, club, family.",
+        comment="Activity category: sports, music, arts, club, family.",
+    )
+    location: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        nullable=True,
+        doc="Physical venue or online location of the activity.",
+        comment="Physical venue or online location of the activity.",
+    )
+    start_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        doc="Activity start timestamp (UTC).",
+        comment="Activity start timestamp (UTC).",
+    )
+    end_time: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        doc="Activity end timestamp (UTC).",
+        comment="Activity end timestamp (UTC).",
+    )
+    recurrence_rrule: Mapped[Optional[str]] = mapped_column(
+        String(255),
+        nullable=True,
+        doc="Optional RFC 5545 recurrence rule string.",
+        comment="Optional RFC 5545 recurrence rule string.",
+    )
+    coach_or_leader: Mapped[Optional[str]] = mapped_column(
+        String(128),
+        nullable=True,
+        doc="Coach, instructor, or organizer name.",
+        comment="Coach, instructor, or organizer name.",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=False,
+        doc="Creation timestamp (UTC).",
+        comment="Creation timestamp (UTC).",
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=False,
+        doc="Last modification timestamp (UTC).",
+        comment="Last modification timestamp (UTC).",
+    )
