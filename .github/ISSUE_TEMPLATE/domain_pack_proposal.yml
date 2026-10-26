@@ -1,0 +1,58 @@
+name: Domain Pack or Specialist Agent Proposal
+description: Propose a new domain pack, specialist agent, or multi-agent deliberation panel
+title: "[Pack/Agent Proposal]: "
+labels: ["pack-proposal", "agent-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to propose a new specialist agent, skill pack, or multi-agent deliberation panel (`PanelSpec`) for Yarvelle.
+  - type: input
+    id: identifier
+    attributes:
+      label: Agent / Panel Identifier
+      description: Kebab-case identifier (e.g., `cashflow-planner`, `family-logistics-panel`).
+      placeholder: "specialist-or-panel-id"
+    validations:
+      required: true
+  - type: dropdown
+    id: domain_scope
+    attributes:
+      label: Primary Domain Scope
+      options:
+        - "finance"
+        - "education"
+        - "household"
+        - "health"
+        - "cross-domain (multi-pack panel)"
+    validations:
+      required: true
+  - type: textarea
+    id: intended_use
+    attributes:
+      label: Intended Use & Non-Prescriptive Boundary
+      description: Specify the target household workflow, cognitive aid role, and explicit non-prescriptive exclusions (e.g., no fiduciary investment advice, no legal/tax filing advice, no medical diagnosis).
+      placeholder: |
+        Assists households with organizing monthly cashflow and upcoming bill schedules.
+        Explicitly excludes fiduciary investment, tax filing, or legal advice.
+    validations:
+      required: true
+  - type: textarea
+    id: tools_and_claims
+    attributes:
+      label: Declared Tools, Skills & Typed Claims
+      description: List the required pack tools, skills, and any `TypedClaim` units (`USD`, `minutes`, `kcal`, `count`, `percentage`, `points`, `boolean`) exported during deliberation.
+      placeholder: |
+        - Tools: finance_list_recurring_bills, db_execute_query
+        - Exported TypedClaims: monthly_budget_allocation (USD)
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Safety & Scope Isolation Confirmations
+      options:
+        - label: The proposal respects non-prescriptive advisory boundaries for its domain.
+          required: true
+        - label: Any cross-scope reads are explicitly declared in `pack.yaml` (`declared_reads`) and gated by runtime grants.
+          required: true
