@@ -26,21 +26,21 @@ def get_household_router_contributions() -> List[RouterContribution]:
     return [
         RouterContribution(
             chores_router,
-            prefix="/api/v1/household/chores",
+            prefix="/household/chores",
             pack_id="household",
             scope="household.chores",
             level="read",
         ),
         RouterContribution(
             meals_router,
-            prefix="/api/v1/household/meals",
+            prefix="/household/meals",
             pack_id="household",
             scope="household.meals",
             level="read",
         ),
         RouterContribution(
             activities_router,
-            prefix="/api/v1/household/activities",
+            prefix="/household/activities",
             pack_id="household",
             scope="household.activities",
             level="read",

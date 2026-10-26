@@ -27,28 +27,28 @@ def get_finance_router_contributions() -> List[RouterContribution]:
     return [
         RouterContribution(
             accounts_router,
-            prefix="/api/v1/finance/accounts",
+            prefix="/finance/accounts",
             pack_id="finance",
             scope="finance.accounts",
             level="read",
         ),
         RouterContribution(
             transactions_router,
-            prefix="/api/v1/finance/transactions",
+            prefix="/finance/transactions",
             pack_id="finance",
             scope="finance.transactions",
             level="read",
         ),
         RouterContribution(
             bills_router,
-            prefix="/api/v1/finance/bills",
+            prefix="/finance/bills",
             pack_id="finance",
             scope="finance.bills",
             level="read",
         ),
         RouterContribution(
             budget_router,
-            prefix="/api/v1/finance/budget",
+            prefix="/finance/budget",
             pack_id="finance",
             scope="finance.budget",
             level="read",

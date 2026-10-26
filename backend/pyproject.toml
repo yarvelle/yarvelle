@@ -31,7 +31,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "yarvelle-core>=0.1.0,<0.2.0",
+    "yarvelle-core>=0.1.1,<0.2.0",
     "carefold>=0.5.0b1",
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.30.0",
