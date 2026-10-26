@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability Disclosure
+    url: https://github.com/yarvelle/yarvelle/security/advisories/new
+    about: Please report security vulnerabilities or cross-domain scope isolation issues privately via GitHub Security Advisories.
+  - name: Yarvelle Core Runtime Documentation & ADRs
+    url: https://yarvelle.github.io/yarvelle-core/
+    about: Explore the underlying Yarvelle Core architecture, Pack API v1, and living ADRs.

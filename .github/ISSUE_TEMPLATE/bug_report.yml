@@ -1,0 +1,77 @@
+name: Bug Report
+description: File a bug report or regression in Yarvelle or its domain packs
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **Yarvelle**! Please do not include unredacted personal, financial, household, or health information (PII/PHI) in issue reports.
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe what happened...
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Domain Pack / Component
+      description: Select the primary pack or subsystem experiencing the defect.
+      options:
+        - "Finance Pack (yarvelle_finance — Budgets, Bills, Statements)"
+        - "Education Pack (yarvelle_education — Assignments, Reading Logs, Milestones)"
+        - "Household Pack (yarvelle_household — Chores, Meals, Activities, Governance)"
+        - "Health Pack Integration (carefold-health)"
+        - "Cross-Domain Timeline, Entity Links & Conflict Detection"
+        - "Multi-Agent Deliberation Panels (Roundtable / Shared Constraints)"
+        - "Web UI & Design System Integration"
+        - "CLI, Server & CI/CD"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the issue.
+      placeholder: |
+        1. Start Yarvelle server with `yarvelle serve`
+        2. Execute query or action `...`
+        3. Observe error `...`
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened instead?
+      placeholder: Expected the pack or agent to...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs or Terminal Output
+      description: Paste relevant terminal logs or stack traces (ensure all PII is redacted).
+      render: shell
+    validations:
+      required: false
+  - type: input
+    id: environment
+    attributes:
+      label: Environment & Versions
+      description: OS, Python version, Node.js version, SQL database, and LLM provider.
+      placeholder: "macOS 15 / Python 3.12 / SQLite / Ollama llama3.2"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Pre-Submission Checklist
+      options:
+        - label: I have verified that no PII, financial, or sensitive family data is contained in this report.
+          required: true
+        - label: I have searched existing issues to ensure this is not a duplicate.
+          required: true

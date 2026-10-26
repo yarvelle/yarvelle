@@ -1,0 +1,64 @@
+name: Feature Request
+description: Propose a new feature, domain pack workflow, or cross-domain capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Suggesting an enhancement for **Yarvelle**? Share your use case across household coordination, personal finance, education, or health navigation.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: Concise summary of the requested capability or improvement.
+      placeholder: Introduce support for...
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement & Household Use Case
+      description: What challenge or family workflow need does this solve?
+      placeholder: Currently, households cannot...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution & Pack Design
+      description: How should this be implemented across domain packs, tools, or deliberation panels?
+      placeholder: Add a new tool / panel to yarvelle_finance that...
+    validations:
+      required: true
+  - type: dropdown
+    id: subsystem
+    attributes:
+      label: Target Pack / Subsystem
+      options:
+        - "Finance Pack (yarvelle_finance)"
+        - "Education Pack (yarvelle_education)"
+        - "Household Pack (yarvelle_household)"
+        - "Health Pack (carefold-health)"
+        - "Cross-Domain Timeline, Governance & Export"
+        - "Multi-Agent Deliberation Panels"
+        - "Web Application UI"
+        - "CLI & Developer Tooling"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative designs or workarounds you considered.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Community Checklist
+      options:
+        - label: I would be interested in contributing code or documentation for this feature.
+          required: false
+        - label: I have checked existing feature requests to prevent duplicates.
+          required: true
